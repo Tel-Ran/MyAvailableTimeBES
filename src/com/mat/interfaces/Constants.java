@@ -6,6 +6,7 @@ public interface Constants {
 	String ERROR_LOGIN = "Username or password is wrong";
 	String ERROR_EXISTED_PERSON = "Current person is already in your Address Book";
 	String ERROR_REPEAT = "";
+	String ERROR_CREATE_CALENDAR = "Error to create new Calendar";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -14,8 +15,11 @@ public interface Constants {
 	String REQUEST_GET_CONTACTS = "/getContacts";
 	String REQUEST_REPEAT = "/repeat";
 	String REQUEST_REMOVE_CALENDAR = "/removeCalendar";
+	String REQUEST_CREATE_CALENDAR = "/createCalendar";
 	
 	String SLOT_STATUS_FREE = "free";
+	
+	
 	
 	
 	

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mat.json.AddressBook;
+import com.mat.json.MyCalendar;
 import com.mat.json.Person;
 import com.mat.json.User;
 import com.mat.response.Response;
@@ -77,6 +78,19 @@ public class MatBesController extends ExceptionHandlerController {
 		try {
 			AddressBook contacts = services.getAddressBook(userId);
 			return Response.successResponse(contacts);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_CREATE_CALENDAR, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> createCalendar(@RequestBody MyCalendar newCalendar) throws RestException {
+		try {
+			MyCalendar res = services.createCalendar(newCalendar);
+			if(res != null)
+				return Response.successResponse(res);
+			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}
