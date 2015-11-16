@@ -128,31 +128,4 @@ public class ServicesHibernate implements IMatRepository {
 		return res;
 	}
 
-	@Override
-	@Transactional
-	public boolean repeatCalendar(int calendarId, Date date) {
-		CalendarDAO calendar = em.find(CalendarDAO.class, calendarId);
-		Iterable<SlotDAO> slots = calendar.getSlots();
-
-		Calendar javaCal = new GregorianCalendar();
-		javaCal.setFirstDayOfWeek(Calendar.MONDAY);
-
-		for (SlotDAO slot : slots) {
-			javaCal.setTime(slot.getBeginning());
-			javaCal.add(Calendar.DATE, 7);
-			if (javaCal.getTime().compareTo(date) < 0) {
-				SlotDAO newSlot = new SlotDAO();
-				newSlot.setBeginning(javaCal.getTime());
-				newSlot.setCalendar(slot.getCalendar());
-				newSlot.setClient(slot.getClient());
-				newSlot.setMessageBar(slot.getMessageBar());
-				StatusDAO newStatus = new StatusDAO();
-				newStatus.setConfirmation(0);
-				newStatus.setStatusName(Constants.SLOT_STATUS_FREE);
-				newSlot.setStatus(newStatus);
-				em.persist(newSlot);
-			}
-		}
-		return true;
-	}
 }

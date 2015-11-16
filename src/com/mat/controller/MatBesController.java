@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mat.json.AddressBook;
-import com.mat.json.MyCalendar;
 import com.mat.json.Person;
 import com.mat.json.User;
 import com.mat.response.Response;
@@ -78,18 +77,6 @@ public class MatBesController extends ExceptionHandlerController {
 		try {
 			AddressBook contacts = services.getAddressBook(userId);
 			return Response.successResponse(contacts);
-		} catch (Exception e) {
-			throw new RestException(e);
-		}
-	}
-	
-	@RequestMapping(value = Constants.REQUEST_REPEAT, method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> repeatCalendar(@RequestBody int calendarId, @RequestBody Date date) throws RestException {
-		try {
-			if(services.repeatCalendar(calendarId, date))
-				return Response.emptyResponse();
-			return Response.errorResponse(Constants.ERROR_REPEAT);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}

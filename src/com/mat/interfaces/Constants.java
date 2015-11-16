@@ -13,8 +13,10 @@ public interface Constants {
 	String REQUEST_ADD_PERSON = "/addPerson";
 	String REQUEST_GET_CONTACTS = "/getContacts";
 	String REQUEST_REPEAT = "/repeat";
+	String REQUEST_REMOVE_CALENDAR = "/removeCalendar";
 	
 	String SLOT_STATUS_FREE = "free";
+	
 	
 	
 

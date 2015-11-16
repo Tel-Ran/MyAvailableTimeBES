@@ -1,7 +1,6 @@
 package com.mat.interfaces;
 
 
-import java.util.Date;
 
 import com.mat.json.AddressBook;
 import com.mat.json.Person;
@@ -17,6 +16,4 @@ public interface IMatRepository {
 	AddressBook getAddressBook(int userId);
 
 	boolean addPersonToAddressBook(Person person);
-
-	boolean repeatCalendar(int calendarId, Date date);
 }
