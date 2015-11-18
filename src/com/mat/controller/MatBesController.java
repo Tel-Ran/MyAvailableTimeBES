@@ -101,7 +101,7 @@ public class MatBesController extends ExceptionHandlerController {
 			if(persistenceServices.removeCalendar(calendarId)) {
 				return Response.emptyResponse();
 			}
-			return Response.errorResponse(Constants.ERROR_REPEAT);
+			return Response.errorResponse(Constants.ERROR_REMOVE_CALENDAR);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}

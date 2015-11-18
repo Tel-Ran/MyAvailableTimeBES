@@ -7,6 +7,7 @@ public interface Constants {
 	String ERROR_EXISTED_PERSON = "Current person is already in your Address Book";
 	String ERROR_REPEAT = "";
 	String ERROR_CREATE_CALENDAR = "Error to create new Calendar";
+	String ERROR_REMOVE_CALENDAR = "Current calendar has not been not found";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -18,6 +19,7 @@ public interface Constants {
 	String REQUEST_CREATE_CALENDAR = "/createCalendar";
 	
 	String SLOT_STATUS_FREE = "free";
+
 	
 	
 	
