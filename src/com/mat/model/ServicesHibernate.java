@@ -10,7 +10,7 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mat.dao.*;
-import com.mat.interfaces.IMatRepository;
+import com.mat.interfaces.*;
 import com.mat.json.*;
 
 public class ServicesHibernate implements IMatRepository {
@@ -138,6 +138,21 @@ public class ServicesHibernate implements IMatRepository {
 		em.persist(calendarDao);
 		newCalendar.setCalendarId(calendarDao.getId());
 		return newCalendar;
+	}
+	
+	@Override
+	@Transactional
+	public boolean removeCalendar(int id){
+		CalendarDAO cal = em.find(CalendarDAO.class, id);
+		if (cal != null) {
+			List<SlotDAO> slots = cal.getSlots();
+			for (SlotDAO slot : slots) {
+				em.remove(slot);
+			}
+			em.remove(cal);
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -19,4 +19,6 @@ public interface IMatRepository {
 	boolean addPersonToAddressBook(Person person);
 
 	MyCalendar createCalendar(MyCalendar newCalendar);
+
+	boolean removeCalendar(int id);
 }
