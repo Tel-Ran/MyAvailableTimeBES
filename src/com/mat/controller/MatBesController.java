@@ -98,7 +98,7 @@ public class MatBesController extends ExceptionHandlerController {
 	@RequestMapping(value = Constants.REQUEST_REMOVE_CALENDAR + "/{calendarId}", method = RequestMethod.GET)
 	public @ResponseBody Map<String, Object> removeCalendar(@PathVariable int calendarId) throws RestException {
 		try {
-			if(services.removeCalendar(calendarId)) {
+			if(persistenceServices.removeCalendar(calendarId)) {
 				return Response.emptyResponse();
 			}
 			return Response.errorResponse(Constants.ERROR_REPEAT);
