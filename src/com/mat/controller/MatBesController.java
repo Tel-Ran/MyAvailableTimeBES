@@ -2,11 +2,7 @@ package com.mat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.mat.json.AddressBook;
 import com.mat.json.MyCalendar;
@@ -22,13 +18,15 @@ import java.util.*;
 public class MatBesController extends ExceptionHandlerController {
 
 	@Autowired
-	IMatRepository services;
+	IMatRepository persistenceServices;
+	@Autowired
+	IExternalServices externalServices;
 
 	@RequestMapping(value = Constants.REQUEST_CREATE_USER, method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> createUser(@RequestBody User user) throws RestException {
 		try {
-			if (services.createUser(user))
+			if (persistenceServices.createUser(user))
 				return Response.emptyResponse();
 			return Response.errorResponse(Constants.ERROR_EXISTED_USER);
 		} catch (Exception e) {
@@ -41,7 +39,7 @@ public class MatBesController extends ExceptionHandlerController {
 	public Map<String, Object> loginUser(@RequestBody User user) throws RestException {
 		try {
 			User res;
-			if ((res = services.loginUser(user)) != null)
+			if ((res = persistenceServices.loginUser(user)) != null)
 				return Response.successResponse(res);
 			return Response.errorResponse(Constants.ERROR_LOGIN);
 		} catch (Exception e) {
@@ -53,7 +51,7 @@ public class MatBesController extends ExceptionHandlerController {
 	@ResponseBody
 	public Map<String, Object> getCalendars(@PathVariable int userId) throws RestException {
 		try {
-			User res = services.getCalendars(userId);
+			User res = persistenceServices.getCalendars(userId);
 			return Response.successResponse(res);
 		} catch (Exception e) {
 			throw new RestException(e);
@@ -64,7 +62,7 @@ public class MatBesController extends ExceptionHandlerController {
 	@ResponseBody
 	public Map<String, Object> addPerson(@RequestBody Person person) throws RestException {
 		try {
-			if (services.addPersonToAddressBook(person))
+			if (persistenceServices.addPersonToAddressBook(person))
 				return Response.emptyResponse();
 			return Response.errorResponse(Constants.ERROR_EXISTED_PERSON);
 		} catch (Exception e) {
@@ -76,7 +74,7 @@ public class MatBesController extends ExceptionHandlerController {
 	@ResponseBody
 	public Map<String, Object> getContactList(@PathVariable int userId) throws RestException {
 		try {
-			AddressBook contacts = services.getAddressBook(userId);
+			AddressBook contacts = persistenceServices.getAddressBook(userId);
 			return Response.successResponse(contacts);
 		} catch (Exception e) {
 			throw new RestException(e);
@@ -87,7 +85,7 @@ public class MatBesController extends ExceptionHandlerController {
 	@ResponseBody
 	public Map<String, Object> createCalendar(@RequestBody MyCalendar newCalendar) throws RestException {
 		try {
-			MyCalendar res = services.createCalendar(newCalendar);
+			MyCalendar res = persistenceServices.createCalendar(newCalendar);
 			if(res != null)
 				return Response.successResponse(res);
 			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR);

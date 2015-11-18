@@ -64,8 +64,6 @@
 		<!-- End of Spring Core container -->
 
 		<!-- Spring Data access/Integration -->
-
-		<!-- Spring Data access/Integration -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
@@ -116,6 +114,13 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc-portlet</artifactId>
+		</dependency>
+
+		<!-- Hessian -->
+		<dependency>
+			<groupId>com.caucho</groupId>
+			<artifactId>hessian</artifactId>
+			<version>4.0.38</version>
 		</dependency>
 
 		<!-- Jackson -->

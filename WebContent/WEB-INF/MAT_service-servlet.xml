@@ -16,10 +16,6 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 		">
    	
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	
-	<bean id="services" class="com.mat.model.ServicesHibernate"></bean>
-
 	<context:component-scan base-package="com.mat.controller" />
 
 	<bean

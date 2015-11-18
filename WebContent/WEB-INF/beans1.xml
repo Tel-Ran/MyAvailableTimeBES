@@ -8,11 +8,21 @@
 	<bean id="emf" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="springHibernate" />
 	</bean>
-	
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-	
+
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="emf" />
 	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="persistenceServices" class="com.mat.model.ServicesHibernate"></bean>
 	
+	<bean id="externalServices" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="http://localhost:8080/15_09_29_PersonService/persons_service.service"></property>
+		<property name="serviceInterface" value="com.mat.interfaces.IExternalServices"></property>
+	</bean>
+
 </beans>
