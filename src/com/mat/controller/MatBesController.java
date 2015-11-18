@@ -15,6 +15,7 @@ import com.mat.json.User;
 import com.mat.response.Response;
 import com.mat.exception.RestException;
 import com.mat.interfaces.*;
+
 import java.util.*;
 
 @Controller
@@ -95,5 +96,17 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-
+	
+	@RequestMapping(value = Constants.REQUEST_REMOVE_CALENDAR + "/{calendarId}", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> removeCalendar(@PathVariable int calendarId) throws RestException {
+		try {
+			if(services.removeCalendar(calendarId)) {
+				return Response.emptyResponse();
+			}
+			return Response.errorResponse(Constants.ERROR_REPEAT);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+	
 }
