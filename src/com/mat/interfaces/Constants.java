@@ -9,6 +9,9 @@ public interface Constants {
 	String ERROR_CREATE_CALENDAR = "Error to create new Calendar";
 	String ERROR_REMOVE_CALENDAR = "Current calendar has not been not found";
 	
+	String ERROR_GET_WEEK = "Error in getting week";
+	String ERROR_EDIT_CALENDAR = "Error editing calendar";
+
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
 	String REQUEST_GET_CALENDARS = "/getCalendars";
@@ -17,13 +20,9 @@ public interface Constants {
 	String REQUEST_REPEAT = "/repeat";
 	String REQUEST_REMOVE_CALENDAR = "/removeCalendar";
 	String REQUEST_CREATE_CALENDAR = "/createCalendar";
-	
-	String SLOT_STATUS_FREE = "free";
+	String REQUEST_GET_WEEK = "getWeek";
+	String REQUEST_EDIT_CALENDAR = "/editCalendar";
 
-	
-	
-	
-	
-	
+	String SLOT_STATUS_FREE = "free";
 
 }

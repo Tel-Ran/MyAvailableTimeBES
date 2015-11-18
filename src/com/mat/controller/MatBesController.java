@@ -88,6 +88,7 @@ public class MatBesController extends ExceptionHandlerController {
 		try {
 			MyCalendar res = persistenceServices.createCalendar(newCalendar);
 			if(res != null)
+
 				return Response.successResponse(res);
 			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR);
 		} catch (Exception e) {
@@ -107,4 +108,32 @@ public class MatBesController extends ExceptionHandlerController {
 		}
 	}
 	
+
+	@RequestMapping(value = Constants.REQUEST_GET_WEEK + "/{idCalendar}" + "/{weekNumber}", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getWeek(@PathVariable int idCalendar, @PathVariable int weekNumber)
+			throws RestException {
+		try {
+			MyCalendar myCalendar = persistenceServices.getWeek(idCalendar, weekNumber);
+			if (myCalendar != null)
+				return Response.successResponse(myCalendar);
+			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+	
+	@RequestMapping(value = Constants.REQUEST_EDIT_CALENDAR, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> editCalendar(@RequestBody MyCalendar myCalendar)
+			throws RestException {
+		try {
+			
+			if (persistenceServices.editCalendar(myCalendar))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_EDIT_CALENDAR);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
 }

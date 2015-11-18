@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mat.dao.*;
 import com.mat.interfaces.*;
 import com.mat.json.*;
+import com.mat.mediator.ConvertorDaoToJson;
+import com.mat.mediator.ConvertorJsonToDao;
+import com.mat.utils.DateUtil;
 
 public class ServicesHibernate implements IMatRepository {
 
@@ -155,4 +158,72 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	@Override
+	@Transactional
+	public MyCalendar getWeek(int calendarId, int weekNumber) {
+		List<Date> startEndDates = getStartEndDays(weekNumber);
+		MyCalendar myCalendar = getMyCalendar(calendarId);
+		List<Slot> slots = myCalendar.getSlots();
+		List<Slot> slotsWeek = new LinkedList<Slot>();
+		for (Slot slot : slots) {
+			if (slot.getBeginning().after(startEndDates.get(0)) && slot.getBeginning().before(startEndDates.get(1))) {
+				slotsWeek.add(slot);
+			}
+		}
+		myCalendar.setSlots(slotsWeek);
+		myCalendar.setWeekNumber(weekNumber);
+		return myCalendar;
+	}
+	
+	private MyCalendar getMyCalendar(int calendarId) {
+		CalendarDAO calendarDao = em.find(CalendarDAO.class, calendarId);
+		return ConvertorDaoToJson.convertCalendar(calendarDao);
+	}
+
+	private List<Date> getStartEndDays(int weekNumber) {
+		int coef = 7 * weekNumber;
+		List<Date> dates = new LinkedList<Date>();
+		Calendar calendar = new GregorianCalendar();
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+		int difference = calendar.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
+		if (difference < 0) {
+			calendar.add(Calendar.DAY_OF_WEEK, -7 - difference + coef);
+		} else {
+			calendar.add(Calendar.DAY_OF_WEEK, -difference + coef);
+		}
+		dates.add(calendar.getTime());
+		calendar.add(Calendar.DAY_OF_WEEK, 7);
+		dates.add(calendar.getTime());
+		return dates;
+	}
+
+	@Override
+	@Transactional
+	public boolean editCalendar(MyCalendar myCalendar) {
+		int myCalendarId = myCalendar.getCalendarId();
+		CalendarDAO calendarDao = em.find(CalendarDAO.class, myCalendarId);
+		List<Slot> weekSlots = myCalendar.getSlots();
+		List<SlotDAO> slotsDao = calendarDao.getSlots();
+		for (Slot changedSlot : weekSlots) {
+			if (!isTheSameDateSlot(slotsDao, changedSlot)) {
+				SlotDAO sl = ConvertorJsonToDao.convertSlot(changedSlot);
+				sl.setCalendar(calendarDao);
+				em.persist(sl);
+			}
+		}
+		return true;
+	}
+
+	protected boolean isTheSameDateSlot(List<SlotDAO> slotsDao, Slot changedSlot) {
+		for (SlotDAO slotDao : slotsDao) {
+			if (DateUtil.idTheSameDate(changedSlot.getBeginning(), slotDao.getBeginning())) {
+				slotDao.setMessageBar(changedSlot.getMessageBar());
+				slotDao.setStatus(ConvertorJsonToDao.convertStatus(changedSlot.getStatus()));
+				slotDao.setClient(ConvertorJsonToDao.convertClient(changedSlot.getClient()));
+				slotDao.setParticipants(ConvertorJsonToDao.convertParticipants(changedSlot.getParticipants()));
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -21,4 +21,9 @@ public interface IMatRepository {
 	MyCalendar createCalendar(MyCalendar newCalendar);
 
 	boolean removeCalendar(int id);
+	
+	MyCalendar getWeek(int calendarId, int weekNumber);
+
+	boolean editCalendar(MyCalendar myCalendar);
+
 }
