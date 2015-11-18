@@ -10,7 +10,7 @@ public class UploadRequest {
 	String myCalendarName;
 	int duration; // time period in minutes
 	List<ExternalCalendar> calendars; // calendars for upload Google,Outlook
-	List<Date> slots;// list of dates from which the selected slots begin
+	List<Slot> slots;// list of dates from which the selected slots begin
 
 	public int getUserId() {
 		return userId;
@@ -44,11 +44,11 @@ public class UploadRequest {
 		this.calendars = calendars;
 	}
 
-	public List<Date> getSlots() {
+	public List<Slot> getSlots() {
 		return slots;
 	}
 
-	public void setSlots(List<Date> slots) {
+	public void setSlots(List<Slot> slots) {
 		this.slots = slots;
 	}
 
