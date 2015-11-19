@@ -142,10 +142,10 @@ public class ServicesHibernate implements IMatRepository {
 		newCalendar.setCalendarId(calendarDao.getId());
 		return newCalendar;
 	}
-	
+
 	@Override
 	@Transactional
-	public boolean removeCalendar(int id){
+	public boolean removeCalendar(int id) {
 		CalendarDAO cal = em.find(CalendarDAO.class, id);
 		if (cal != null) {
 			List<SlotDAO> slots = cal.getSlots();
@@ -174,7 +174,7 @@ public class ServicesHibernate implements IMatRepository {
 		myCalendar.setWeekNumber(weekNumber);
 		return myCalendar;
 	}
-	
+
 	private MyCalendar getMyCalendar(int calendarId) {
 		CalendarDAO calendarDao = em.find(CalendarDAO.class, calendarId);
 		return ConvertorDaoToJson.convertCalendar(calendarDao);
@@ -199,31 +199,27 @@ public class ServicesHibernate implements IMatRepository {
 
 	@Override
 	@Transactional
-	public boolean editCalendar(MyCalendar myCalendar) {
-		int myCalendarId = myCalendar.getCalendarId();
+	public boolean editCalendar(MyCalendar myCalendarJson) {
+		int myCalendarId = myCalendarJson.getCalendarId();
 		CalendarDAO calendarDao = em.find(CalendarDAO.class, myCalendarId);
-		List<Slot> weekSlots = myCalendar.getSlots();
-		List<SlotDAO> slotsDao = calendarDao.getSlots();
-		for (Slot changedSlot : weekSlots) {
-			if (!isTheSameDateSlot(slotsDao, changedSlot)) {
+		List<Slot> slotsJson = myCalendarJson.getSlots(); // Список всех измененных слотов от FES
+		List<SlotDAO> slotsDao = calendarDao.getSlots(); // Список слотов из базы данных конкретного календаря
+		
+		for(Slot changedSlot:slotsJson){
+			for(SlotDAO slotDao:slotsDao){
+				if(DateUtil.isTheSameDate(changedSlot.getBeginning(), slotDao.getBeginning())){
+					slotDao.setClient(ConvertorJsonToDao.convertClient(changedSlot.getClient()));
+					slotDao.setMessageBar(changedSlot.getMessageBar());
+					slotDao.setStatus(ConvertorJsonToDao.convertStatus(changedSlot.getStatus()));
+					slotDao.setParticipants(ConvertorJsonToDao.convertParticipants(changedSlot.getParticipants()));
+					break;
+				}
 				SlotDAO sl = ConvertorJsonToDao.convertSlot(changedSlot);
 				sl.setCalendar(calendarDao);
 				em.persist(sl);
+				break;
 			}
 		}
 		return true;
-	}
-
-	protected boolean isTheSameDateSlot(List<SlotDAO> slotsDao, Slot changedSlot) {
-		for (SlotDAO slotDao : slotsDao) {
-			if (DateUtil.idTheSameDate(changedSlot.getBeginning(), slotDao.getBeginning())) {
-				slotDao.setMessageBar(changedSlot.getMessageBar());
-				slotDao.setStatus(ConvertorJsonToDao.convertStatus(changedSlot.getStatus()));
-				slotDao.setClient(ConvertorJsonToDao.convertClient(changedSlot.getClient()));
-				slotDao.setParticipants(ConvertorJsonToDao.convertParticipants(changedSlot.getParticipants()));
-				return true;
-			}
-		}
-		return false;
 	}
 }
