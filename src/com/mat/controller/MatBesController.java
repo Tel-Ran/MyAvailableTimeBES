@@ -128,7 +128,6 @@ public class MatBesController extends ExceptionHandlerController {
 	public Map<String, Object> editCalendar(@RequestBody MyCalendar myCalendar)
 			throws RestException {
 		try {
-			
 			if (persistenceServices.editCalendar(myCalendar))
 				return Response.emptyResponse();
 			return Response.errorResponse(Constants.ERROR_EDIT_CALENDAR);

@@ -183,7 +183,7 @@ public class ServicesHibernate implements IMatRepository {
 
 	private List<Date> getStartEndDays(int weekNumber) {
 		int coef = 7 * weekNumber;
-		List<Date> res = new LinkedList<Date>();
+		List<Date> res = new ArrayList<Date>();
 		Calendar calendar = new GregorianCalendar();
 		int difference = calendar.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
 		if (difference < 0) {
@@ -211,8 +211,8 @@ public class ServicesHibernate implements IMatRepository {
 	public boolean editCalendar(MyCalendar myCalendarJson) {
 		int myCalendarId = myCalendarJson.getCalendarId();
 		CalendarDAO calendarDao = em.find(CalendarDAO.class, myCalendarId);
-		List<Slot> slotsJson = myCalendarJson.getSlots(); // Список всех измененных слотов от FES
-		List<SlotDAO> slotsDao = calendarDao.getSlots(); // Список слотов из базы данных конкретного календаря
+		List<Slot> slotsJson = myCalendarJson.getSlots(); 
+		List<SlotDAO> slotsDao = calendarDao.getSlots(); 
 		
 		for(Slot changedSlot:slotsJson){
 			for(SlotDAO slotDao:slotsDao){
