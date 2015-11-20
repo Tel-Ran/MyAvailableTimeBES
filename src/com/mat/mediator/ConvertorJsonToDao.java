@@ -5,7 +5,6 @@ import com.mat.dao.*;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import com.mat.json.*;
 
 /**
@@ -14,6 +13,8 @@ import com.mat.json.*;
 public class ConvertorJsonToDao {
 
 	public static List<SlotDAO> getSlotsDAO(List<Slot> slots) {
+		if (slots == null)
+			return null;
 		List<SlotDAO> slotsDao = new LinkedList<SlotDAO>();
 		for (Slot slot : slots) {
 			slotsDao.add(convertSlot(slot));
@@ -22,41 +23,51 @@ public class ConvertorJsonToDao {
 	}
 
 	public static SlotDAO convertSlot(Slot slot) {
-		SlotDAO slotDao=new SlotDAO();
+		if (slot == null)
+			return null;
+		SlotDAO slotDao = new SlotDAO();
 		slotDao.setBeginning(slot.getBeginning());
 		slotDao.setClient(convertClient(slot.getClient()));
 		slotDao.setMessageBar(slot.getMessageBar());
 		slotDao.setStatus(convertStatus(slot.getStatus()));
 		slotDao.setParticipants(convertParticipants(slot.getParticipants()));
-		
+
 		return slotDao;
 	}
 
 	public static List<PersonDAO> convertParticipants(List<Person> participants) {
-		List<PersonDAO> personsDao=new LinkedList<PersonDAO>();
-		for(Person person:participants){
+		if (participants == null)
+			return null;
+
+		List<PersonDAO> personsDao = new LinkedList<PersonDAO>();
+		for (Person person : participants) {
 			personsDao.add(convertClient(person));
 		}
 		return personsDao;
 	}
 
 	public static StatusDAO convertStatus(Status status) {
-		StatusDAO statusDao=new StatusDAO();
+		if (status == null)
+			return null;
+		StatusDAO statusDao = new StatusDAO();
 		statusDao.setConfirmation(status.getConfirmation());
 		statusDao.setStatusName(status.getStatusName());
 		return statusDao;
 	}
 
 	public static PersonDAO convertClient(Person client) {
-		PersonDAO personDao=new PersonDAO();
+		if (client == null)
+			return null;
+		PersonDAO personDao = new PersonDAO();
 		personDao.setEmail(client.getEmail());
 		personDao.setLastName(client.getLastName());
 		personDao.setName(client.getFirstName());
 		return personDao;
 	}
 
-	public static CalendarDAO convertCalendar(MyCalendar myCalendar,
-			UserDAO user) {
+	public static CalendarDAO convertCalendar(MyCalendar myCalendar, UserDAO user) {
+		if (myCalendar == null)
+			return null;
 		CalendarDAO calendarDao = new CalendarDAO();
 		String calendarName = myCalendar.getCalendarName();
 		int duration = myCalendar.getDuration();

@@ -9,15 +9,19 @@ import com.mat.json.*;
 public class ConvertorDaoToJson {
 
 	public static List<Slot> getSlots(List<SlotDAO> slotsDAO) {
+		if (slotsDAO == null)
+			return null;
 		List<Slot> slotsJson = new LinkedList<Slot>();
 		for (SlotDAO slotDao : slotsDAO) {
-			Slot sl=convertSlot(slotDao);
+			Slot sl = convertSlot(slotDao);
 			slotsJson.add(sl);
 		}
 		return slotsJson;
 	}
 
 	private static Slot convertSlot(SlotDAO slotDao) {
+		if (slotDao == null)
+			return null;
 		Slot slotJson = new Slot();
 		slotJson.setBeginning(slotDao.getBeginning());
 		slotJson.setClient(convertPerson(slotDao.getClient()));
@@ -28,6 +32,8 @@ public class ConvertorDaoToJson {
 	}
 
 	private static List<Person> convertParticipants(List<PersonDAO> participants) {
+		if (participants == null)
+			return null;
 		List<Person> personsJson = new LinkedList<Person>();
 		for (PersonDAO person : participants) {
 			personsJson.add(convertPerson(person));
@@ -36,6 +42,8 @@ public class ConvertorDaoToJson {
 	}
 
 	private static Status convertStatus(StatusDAO statusDAO) {
+		if (statusDAO == null)
+			return null;
 		Status statusJson = new Status();
 		statusJson.setConfirmation(statusDAO.getConfirmation());
 		statusJson.setStatusName(statusDAO.getStatusName());
@@ -43,6 +51,8 @@ public class ConvertorDaoToJson {
 	}
 
 	private static Person convertPerson(PersonDAO client) {
+		if (client == null)
+			return null;
 		Person personJson = new Person();
 		personJson.setEmail(client.getEmail());
 		personJson.setFirstName(client.getName());
@@ -51,6 +61,8 @@ public class ConvertorDaoToJson {
 	}
 
 	public static MyCalendar convertCalendar(CalendarDAO calendarDao) {
+		if (calendarDao == null)
+			return null;
 		MyCalendar myCalendar = new MyCalendar();
 		myCalendar.setCalendarId(calendarDao.getId());
 		myCalendar.setCalendarName(calendarDao.getCalendarName());

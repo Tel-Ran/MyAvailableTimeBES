@@ -165,6 +165,7 @@ public class ServicesHibernate implements IMatRepository {
 		MyCalendar myCalendar = getMyCalendar(calendarId);
 		List<Slot> slots = myCalendar.getSlots();
 		List<Slot> slotsWeek = new LinkedList<Slot>();
+		
 		for (Slot slot : slots) {
 			if (slot.getBeginning().after(startEndDates.get(0)) && slot.getBeginning().before(startEndDates.get(1))) {
 				slotsWeek.add(slot);
@@ -182,19 +183,27 @@ public class ServicesHibernate implements IMatRepository {
 
 	private List<Date> getStartEndDays(int weekNumber) {
 		int coef = 7 * weekNumber;
-		List<Date> dates = new LinkedList<Date>();
+		List<Date> res = new LinkedList<Date>();
 		Calendar calendar = new GregorianCalendar();
-		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		int difference = calendar.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
 		if (difference < 0) {
 			calendar.add(Calendar.DAY_OF_WEEK, -7 - difference + coef);
 		} else {
 			calendar.add(Calendar.DAY_OF_WEEK, -difference + coef);
 		}
-		dates.add(calendar.getTime());
+		//setting min time
+
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		calendar.set(Calendar.HOUR, 11);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		
+		res.add(calendar.getTime());
+		//setting max time
 		calendar.add(Calendar.DAY_OF_WEEK, 7);
-		dates.add(calendar.getTime());
-		return dates;
+
+		res.add(calendar.getTime());
+		return res;
 	}
 
 	@Override

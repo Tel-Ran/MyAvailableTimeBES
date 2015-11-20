@@ -117,7 +117,7 @@ public class MatBesController extends ExceptionHandlerController {
 			MyCalendar myCalendar = persistenceServices.getWeek(idCalendar, weekNumber);
 			if (myCalendar != null)
 				return Response.successResponse(myCalendar);
-			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR);
+			return Response.errorResponse(Constants.ERROR_GET_WEEK);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}
