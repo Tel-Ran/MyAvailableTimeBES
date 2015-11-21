@@ -95,11 +95,11 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
+
 	@RequestMapping(value = Constants.REQUEST_REMOVE_CALENDAR + "/{calendarId}", method = RequestMethod.GET)
 	public @ResponseBody Map<String, Object> removeCalendar(@PathVariable int calendarId) throws RestException {
 		try {
-			if(persistenceServices.removeCalendar(calendarId)) {
+			if (persistenceServices.removeCalendar(calendarId)) {
 				return Response.emptyResponse();
 			}
 			return Response.errorResponse(Constants.ERROR_REMOVE_CALENDAR);
@@ -107,7 +107,6 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
 
 	@RequestMapping(value = Constants.REQUEST_GET_WEEK + "/{idCalendar}" + "/{weekNumber}", method = RequestMethod.GET)
 	@ResponseBody
@@ -122,11 +121,10 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
+
 	@RequestMapping(value = Constants.REQUEST_EDIT_CALENDAR, method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> editCalendar(@RequestBody MyCalendar myCalendar)
-			throws RestException {
+	public Map<String, Object> editCalendar(@RequestBody MyCalendar myCalendar) throws RestException {
 		try {
 			if (persistenceServices.editCalendar(myCalendar))
 				return Response.emptyResponse();
@@ -135,15 +133,27 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
+
 	@RequestMapping(value = Constants.REQUEST_CREATE_CALENDAR_COLLABORATED, method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> createCalendarCollaborated(@RequestBody MyCalendar newCalendar) throws RestException {
 		try {
 			MyCalendar res = persistenceServices.createCollaborationCal(newCalendar);
-			if(res != null)
+			if (res != null)
 				return Response.successResponse(res);
 			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR_COLLABORATED);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_CHANGE_USER_DATA, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> changeUserData(@RequestBody User user) throws RestException {
+		try {
+			if (persistenceServices.changeUserData(user))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_CHANGE_USER_DATA);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}

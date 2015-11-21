@@ -25,6 +25,16 @@ public class UserDAO {
 	String firstName;
 
 	String lastName;
+	
+	String phoneNumber;
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 	@OneToMany(mappedBy = "user")
 	List<SchedulerDAO> shedullers;

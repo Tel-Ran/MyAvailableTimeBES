@@ -247,23 +247,37 @@ public class ServicesHibernate implements IMatRepository {
 		calendarDaoCollaborated.setUser(user);
 
 		Query q1 = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2")
-				.setParameter(1, newCollaboratedCalendar.getCalendarId())
-				.setParameter(2, startEndDates.get(0));
+				.setParameter(1, newCollaboratedCalendar.getCalendarId()).setParameter(2, startEndDates.get(0));
 
 		List<SlotDAO> slotsDAO = q1.getResultList();
 		calendarDaoCollaborated.setSlots(slotsDAO);
 		em.persist(calendarDaoCollaborated);
 		// forms response to FES
 		Query q2 = em
-				.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, newCollaboratedCalendar.getCalendarId())
-				.setParameter(2, startEndDates.get(0))
+				.createQuery(
+						"select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, newCollaboratedCalendar.getCalendarId()).setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
 		List<SlotDAO> slotsWeekDAO = q2.getResultList();
-		newCollaboratedCalendar.setCalendarId(calendarDaoCollaborated.getId()); 
+		newCollaboratedCalendar.setCalendarId(calendarDaoCollaborated.getId());
 		newCollaboratedCalendar.setCalendarName(calendarDaoCollaborated.getCalendarName());
 		newCollaboratedCalendar.setDuration(calendarDaoCollaborated.getDuration());
 		newCollaboratedCalendar.setSlots(ConvertorDaoToJson.getSlots(slotsWeekDAO));
 		return newCollaboratedCalendar;
+	}
+
+	@Override
+	@Transactional
+	public boolean changeUserData(User user) {
+		if (user != null) {
+			UserDAO userDao = em.find(UserDAO.class, user.getUserId());
+			userDao.setFirstName(user.getFirstName());
+			userDao.setLastName(user.getLastName());
+			userDao.setEmail(user.getEmail());
+			userDao.setTimeZone(user.getTimeZone());
+			userDao.setFormat24(user.isFormat24());
+			userDao.setPhoneNumber(user.getPhoneNumber());
+		}
+		return true;
 	}
 }

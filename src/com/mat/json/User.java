@@ -13,6 +13,15 @@ public class User {
 						// false time format 12 (6pm,9pm,...)
 	String firstName;
 	String lastName;
+	String phoneNumber;
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 	List<MyCalendar> calendars;
 

@@ -28,4 +28,6 @@ public interface IMatRepository {
 
 	MyCalendar createCollaborationCal(MyCalendar myCalendar);
 
+	boolean changeUserData(User user);
+
 }
