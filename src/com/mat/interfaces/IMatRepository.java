@@ -26,4 +26,6 @@ public interface IMatRepository {
 
 	boolean editCalendar(MyCalendar myCalendar);
 
+	MyCalendar createCollaborationCal(MyCalendar myCalendar);
+
 }

@@ -162,15 +162,19 @@ public class ServicesHibernate implements IMatRepository {
 	@Transactional
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
-		
-		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, calendarId)
-				.setParameter(2, startEndDates.get(0))
+
+		Query q = em
+				.createQuery(
+						"select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
-		
-		List<SlotDAO> slotsWeekDAO = (List<SlotDAO>) q.getResultList();
+
+		List<SlotDAO> slotsWeekDAO = q.getResultList();
 		List<Slot> slotsWeekJson = ConvertorDaoToJson.getSlots(slotsWeekDAO);
-		CalendarDAO calendarDAO = em.find(CalendarDAO.class, calendarId);// calendar from the Database
+		CalendarDAO calendarDAO = em.find(CalendarDAO.class, calendarId);// calendar
+																			// from
+																			// the
+																			// Database
 		MyCalendar myCalendar = new MyCalendar();// new calendar creating
 
 		myCalendar.setCalendarId(calendarId);
@@ -225,5 +229,27 @@ public class ServicesHibernate implements IMatRepository {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	@Transactional
+	public MyCalendar createCollaborationCal(MyCalendar newCollaboratedCalendar) {
+		List<Date> startEndDates = getStartEndDays(newCollaboratedCalendar.getWeekNumber());
+		UserDAO user = em.find(UserDAO.class, newCollaboratedCalendar.getUserId());
+
+		CalendarDAO calendarDaoCollaborated = new CalendarDAO();
+		calendarDaoCollaborated.setTypeCalendar(Constants.CALENDAR_TYPE_COLLABORATED);
+		calendarDaoCollaborated.setCalendarName(newCollaboratedCalendar.getCalendarName());
+		calendarDaoCollaborated.setDuration(newCollaboratedCalendar.getDuration());
+		calendarDaoCollaborated.setUser(user);
+
+		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2")
+				.setParameter(1, newCollaboratedCalendar.getCalendarId()).setParameter(2, startEndDates.get(0));
+
+		List<SlotDAO> slotsWeekDAO = q.getResultList();
+		calendarDaoCollaborated.setSlots(slotsWeekDAO);
+		em.persist(calendarDaoCollaborated);
+		newCollaboratedCalendar.setCalendarId(calendarDaoCollaborated.getId());
+		return newCollaboratedCalendar;
 	}
 }

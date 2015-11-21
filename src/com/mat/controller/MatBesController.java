@@ -135,4 +135,17 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
+	
+	@RequestMapping(value = Constants.REQUEST_CREATE_CALENDAR_COLLABORATED, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> createCalendarCollaborated(@RequestBody MyCalendar newCalendar) throws RestException {
+		try {
+			MyCalendar res = persistenceServices.createCollaborationCal(newCalendar);
+			if(res != null)
+				return Response.successResponse(res);
+			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR_COLLABORATED);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
 }

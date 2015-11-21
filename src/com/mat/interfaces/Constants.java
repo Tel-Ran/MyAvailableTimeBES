@@ -11,6 +11,7 @@ public interface Constants {
 	
 	String ERROR_GET_WEEK = "There are no slots in the current week";
 	String ERROR_EDIT_CALENDAR = "Error editing calendar";
+	String ERROR_CREATE_CALENDAR_COLLABORATED = "Error creating collaborated calendar";
 
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -23,6 +24,9 @@ public interface Constants {
 	String REQUEST_GET_WEEK = "/getWeek";
 	String REQUEST_EDIT_CALENDAR = "/editCalendar";
 
+	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
+	String REQUEST_CREATE_CALENDAR_COLLABORATED = "/createCollaboratedCal";
+	
 
 }
