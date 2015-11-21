@@ -234,13 +234,15 @@ public class ServicesHibernate implements IMatRepository {
 	@Override
 	@Transactional
 	public MyCalendar createCollaborationCal(MyCalendar newCollaboratedCalendar) {
+
 		List<Date> startEndDates = getStartEndDays(newCollaboratedCalendar.getWeekNumber());
-		UserDAO user = em.find(UserDAO.class, newCollaboratedCalendar.getUserId());
+		CalendarDAO cal = em.find(CalendarDAO.class, newCollaboratedCalendar.getCalendarId());
+		UserDAO user = cal.getUser();
 
 		CalendarDAO calendarDaoCollaborated = new CalendarDAO();
 		calendarDaoCollaborated.setTypeCalendar(Constants.CALENDAR_TYPE_COLLABORATED);
-		calendarDaoCollaborated.setCalendarName(newCollaboratedCalendar.getCalendarName());
-		calendarDaoCollaborated.setDuration(newCollaboratedCalendar.getDuration());
+		calendarDaoCollaborated.setCalendarName(cal.getCalendarName() + " (Collaborated)");
+		calendarDaoCollaborated.setDuration(cal.getDuration());
 		calendarDaoCollaborated.setUser(user);
 
 		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2")
@@ -248,8 +250,12 @@ public class ServicesHibernate implements IMatRepository {
 
 		List<SlotDAO> slotsWeekDAO = q.getResultList();
 		calendarDaoCollaborated.setSlots(slotsWeekDAO);
+
 		em.persist(calendarDaoCollaborated);
-		newCollaboratedCalendar.setCalendarId(calendarDaoCollaborated.getId());
+		newCollaboratedCalendar.setCalendarId(calendarDaoCollaborated.getId()); 
+		newCollaboratedCalendar.setCalendarName(calendarDaoCollaborated.getCalendarName());
+		newCollaboratedCalendar.setDuration(calendarDaoCollaborated.getDuration());
+		newCollaboratedCalendar.setSlots(ConvertorDaoToJson.getSlots(slotsWeekDAO));
 		return newCollaboratedCalendar;
 	}
 }
