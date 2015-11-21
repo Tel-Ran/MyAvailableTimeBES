@@ -162,17 +162,15 @@ public class ServicesHibernate implements IMatRepository {
 	@Transactional
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
-
+		
 		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
+				.setParameter(1, calendarId)
+				.setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
+		
 		List<SlotDAO> slotsWeekDAO = (List<SlotDAO>) q.getResultList();
 		List<Slot> slotsWeekJson = ConvertorDaoToJson.getSlots(slotsWeekDAO);
-
-		CalendarDAO calendarDAO = em.find(CalendarDAO.class, calendarId);// calendar
-																			// from
-																			// the
-																			// Database
+		CalendarDAO calendarDAO = em.find(CalendarDAO.class, calendarId);// calendar from the Database
 		MyCalendar myCalendar = new MyCalendar();// new calendar creating
 
 		myCalendar.setCalendarId(calendarId);
@@ -212,9 +210,11 @@ public class ServicesHibernate implements IMatRepository {
 	@Transactional
 	public boolean editCalendar(MyCalendar myCalendarJson) {
 		List<Slot> slotsJson = myCalendarJson.getSlots();
+		CalendarDAO calendarDAO = em.find(CalendarDAO.class, myCalendarJson.getCalendarId());
 		for (Slot slot : slotsJson) {
 			if (slot.getId() == 0) {
 				SlotDAO newSlotDAO = ConvertorJsonToDao.convertSlot(slot);
+				newSlotDAO.setCalendar(calendarDAO);
 				em.persist(newSlotDAO);
 			} else {
 				SlotDAO oldSlotDAO = em.find(SlotDAO.class, slot.getId());
