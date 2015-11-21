@@ -277,7 +277,8 @@ public class ServicesHibernate implements IMatRepository {
 			userDao.setTimeZone(user.getTimeZone());
 			userDao.setFormat24(user.isFormat24());
 			userDao.setPhoneNumber(user.getPhoneNumber());
+			return true;
 		}
-		return true;
+		return false;
 	}
 }

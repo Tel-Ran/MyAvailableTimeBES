@@ -15,14 +15,6 @@ public class User {
 	String lastName;
 	String phoneNumber;
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	List<MyCalendar> calendars;
 
 	public int getUserId() {
@@ -97,11 +89,18 @@ public class User {
 		this.calendars = calendars;
 	}
 
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", email=" + email + ", password=" + password + ", schedulers=" + schedulers
 				+ ", timeZone=" + timeZone + ", format24=" + format24 + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", calendars=" + calendars + "]";
+				+ lastName + ", phoneNumber=" + phoneNumber + ", calendars=" + calendars + "]";
 	}
-
 }

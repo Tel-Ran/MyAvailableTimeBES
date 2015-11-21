@@ -28,14 +28,6 @@ public class UserDAO {
 	
 	String phoneNumber;
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	@OneToMany(mappedBy = "user")
 	List<SchedulerDAO> shedullers;
 	@OneToMany(mappedBy = "user")
@@ -137,6 +129,13 @@ public class UserDAO {
 
 	public void setCalendars(List<CalendarDAO> calendars) {
 		this.calendars = calendars;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }
