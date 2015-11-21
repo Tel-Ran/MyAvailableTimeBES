@@ -14,7 +14,6 @@ import com.mat.interfaces.*;
 import com.mat.json.*;
 import com.mat.mediator.ConvertorDaoToJson;
 import com.mat.mediator.ConvertorJsonToDao;
-import com.mat.utils.DateUtil;
 
 public class ServicesHibernate implements IMatRepository {
 
@@ -158,27 +157,30 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
-		MyCalendar myCalendar = getMyCalendar(calendarId);
-		List<Slot> slots = myCalendar.getSlots();
-		List<Slot> slotsWeek = new LinkedList<Slot>();
-		
-		for (Slot slot : slots) {
-			if (slot.getBeginning().after(startEndDates.get(0)) && slot.getBeginning().before(startEndDates.get(1))) {
-				slotsWeek.add(slot);
-			}
-		}
-		myCalendar.setSlots(slotsWeek);
+
+		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
+				.setParameter(3, startEndDates.get(1));
+		List<SlotDAO> slotsWeekDAO = (List<SlotDAO>) q.getResultList();
+		List<Slot> slotsWeekJson = ConvertorDaoToJson.getSlots(slotsWeekDAO);
+
+		CalendarDAO calendarDAO = em.find(CalendarDAO.class, calendarId);// calendar
+																			// from
+																			// the
+																			// Database
+		MyCalendar myCalendar = new MyCalendar();// new calendar creating
+
+		myCalendar.setCalendarId(calendarId);
+		myCalendar.setCalendarName(calendarDAO.getCalendarName());
+		myCalendar.setDuration(calendarDAO.getDuration());
+		myCalendar.setSlots(slotsWeekJson);
 		myCalendar.setWeekNumber(weekNumber);
 		return myCalendar;
-	}
-
-	private MyCalendar getMyCalendar(int calendarId) {
-		CalendarDAO calendarDao = em.find(CalendarDAO.class, calendarId);
-		return ConvertorDaoToJson.convertCalendar(calendarDao);
 	}
 
 	private List<Date> getStartEndDays(int weekNumber) {
@@ -191,15 +193,15 @@ public class ServicesHibernate implements IMatRepository {
 		} else {
 			calendar.add(Calendar.DAY_OF_WEEK, -difference + coef);
 		}
-		//setting min time
+		// setting min time
 
 		calendar.add(Calendar.DAY_OF_YEAR, -1);
 		calendar.set(Calendar.HOUR, 11);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
-		
+
 		res.add(calendar.getTime());
-		//setting max time
+		// setting max time
 		calendar.add(Calendar.DAY_OF_WEEK, 7);
 
 		res.add(calendar.getTime());
@@ -209,24 +211,17 @@ public class ServicesHibernate implements IMatRepository {
 	@Override
 	@Transactional
 	public boolean editCalendar(MyCalendar myCalendarJson) {
-		int myCalendarId = myCalendarJson.getCalendarId();
-		CalendarDAO calendarDao = em.find(CalendarDAO.class, myCalendarId);
-		List<Slot> slotsJson = myCalendarJson.getSlots(); 
-		List<SlotDAO> slotsDao = calendarDao.getSlots(); 
-		
-		for(Slot changedSlot:slotsJson){
-			for(SlotDAO slotDao:slotsDao){
-				if(DateUtil.isTheSameDate(changedSlot.getBeginning(), slotDao.getBeginning())){
-					slotDao.setClient(ConvertorJsonToDao.convertClient(changedSlot.getClient()));
-					slotDao.setMessageBar(changedSlot.getMessageBar());
-					slotDao.setStatus(ConvertorJsonToDao.convertStatus(changedSlot.getStatus()));
-					slotDao.setParticipants(ConvertorJsonToDao.convertParticipants(changedSlot.getParticipants()));
-					break;
-				}
-				SlotDAO sl = ConvertorJsonToDao.convertSlot(changedSlot);
-				sl.setCalendar(calendarDao);
-				em.persist(sl);
-				break;
+		List<Slot> slotsJson = myCalendarJson.getSlots();
+		for (Slot slot : slotsJson) {
+			if (slot.getId() == 0) {
+				SlotDAO newSlotDAO = ConvertorJsonToDao.convertSlot(slot);
+				em.persist(newSlotDAO);
+			} else {
+				SlotDAO oldSlotDAO = em.find(SlotDAO.class, slot.getId());
+				oldSlotDAO.setClient(ConvertorJsonToDao.convertClient(slot.getClient()));
+				oldSlotDAO.setMessageBar(slot.getMessageBar());
+				oldSlotDAO.setStatus(ConvertorJsonToDao.convertStatus(slot.getStatus()));
+				oldSlotDAO.setParticipants(ConvertorJsonToDao.convertParticipants(slot.getParticipants()));
 			}
 		}
 		return true;

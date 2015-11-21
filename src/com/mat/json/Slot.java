@@ -4,6 +4,8 @@ import java.util.*;
 
 public class Slot {
 
+	int id;
+	
 	Date beginning;
 	Status status;
 	List<Person> participants;
@@ -50,10 +52,17 @@ public class Slot {
 		this.messageBar = messageBar;
 	}
 
-	@Override
-	public String toString() {
-		return "Slot [beginning=" + beginning + ", status=" + status + ", participants=" + participants + ", client="
-				+ client + ", messageBar=" + messageBar + "]";
+	public int getId() {
+		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Slot [id=" + id + ", beginning=" + beginning + ", status=" + status + ", participants=" + participants
+				+ ", client=" + client + ", messageBar=" + messageBar + "]";
+	}
 }

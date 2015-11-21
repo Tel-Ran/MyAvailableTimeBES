@@ -23,6 +23,7 @@ public class ConvertorDaoToJson {
 		if (slotDao == null)
 			return null;
 		Slot slotJson = new Slot();
+		slotJson.setId(slotDao.getId());
 		slotJson.setBeginning(slotDao.getBeginning());
 		slotJson.setClient(convertPerson(slotDao.getClient()));
 		slotJson.setMessageBar(slotDao.getMessageBar());
