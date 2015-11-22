@@ -177,6 +177,18 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
+	
+	@RequestMapping(value = Constants.REQUEST_REMOVE_CLIENT + "/{slotId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> removeClient(@PathVariable int slotId) throws RestException {
+		try {
+			if (persistenceServices.removeClientFromSlot(slotId))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_REMOVE_CLIENT);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
 
 	@RequestMapping(value = Constants.REQUEST_REPEAT_CALENDAR + "/{dateString}", method = RequestMethod.POST)
 	@ResponseBody

@@ -33,4 +33,6 @@ public interface IMatRepository {
 	
 	boolean repeatCalendar(MyCalendar calendar, Date date);
 
+	boolean removeClientFromSlot(int slotId);
+
 }

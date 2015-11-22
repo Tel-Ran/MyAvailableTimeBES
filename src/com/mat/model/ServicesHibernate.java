@@ -291,9 +291,16 @@ public class ServicesHibernate implements IMatRepository {
 		return true;
 	}
 	
-//	public boolean removeClientFromSlot(int slotId){
-//		
-//	}
+	@Override
+	@Transactional
+	public boolean removeClientFromSlot(int slotId){
+		SlotDAO slotDAO = em.find(SlotDAO.class, slotId);
+		PersonDAO client = slotDAO.getClient();
+		if (client == null)
+			return false;
+		em.remove(client);
+		return true;
+	}
 	
 	/**
 	 * repeats calendar's slots of CURRENT WEEK until specified date 

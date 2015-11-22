@@ -13,6 +13,7 @@ public interface Constants {
 	String ERROR_CREATE_CALENDAR_COLLABORATED = "Error creating collaborated calendar";
 	String ERROR_CHANGE_USER_DATA = "Error changing User data";
 	String ERROR_FIND_PERSON = "Current person has not been found";
+	String ERROR_REMOVE_CLIENT = "there is no client to this slot";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -27,10 +28,10 @@ public interface Constants {
 	String REQUEST_CREATE_CALENDAR_COLLABORATED = "/createCollaboratedCal";
 	String REQUEST_CHANGE_USER_DATA = "/changeData";
 	String REQUEST_SET_CLIENT = "/setClient";
-
+	String REQUEST_REMOVE_CLIENT = "/removeClient";
 
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
 	String STATUS_GREEN = "green";
-
+	
 }
