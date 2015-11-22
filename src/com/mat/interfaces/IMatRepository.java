@@ -27,12 +27,10 @@ public interface IMatRepository {
 
 	boolean editCalendar(MyCalendar myCalendar);
 
-
 	MyCalendar createCollaborationCal(MyCalendar myCalendar);
 
 	boolean changeUserData(User user);
 
-	void setClientToSlot(Slot slot);
-
+	boolean setClientToSlot(Slot slot);
 
 }

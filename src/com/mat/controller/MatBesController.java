@@ -2,12 +2,14 @@ package com.mat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import com.mat.json.AddressBook;
 import com.mat.json.MyCalendar;
 import com.mat.json.Person;
 import com.mat.json.Scheduler;
+import com.mat.json.Slot;
 import com.mat.json.User;
 import com.mat.response.Response;
 import com.mat.exception.RestException;
@@ -41,8 +43,9 @@ public class MatBesController extends ExceptionHandlerController {
 	public Map<String, Object> loginUser(@RequestBody User user) throws RestException {
 		try {
 			User res;
-			if ((res = persistenceServices.loginUser(user)) != null){
-				List<Scheduler> schedulers = externalServices.getAuthorizedSchedulers(res.getUserId(), res.getSchedulers());
+			if ((res = persistenceServices.loginUser(user)) != null) {
+				List<Scheduler> schedulers = externalServices.getAuthorizedSchedulers(res.getUserId(),
+						res.getSchedulers());
 				res.setSchedulers(schedulers);
 				return Response.successResponse(res);
 			}
@@ -91,7 +94,7 @@ public class MatBesController extends ExceptionHandlerController {
 	public Map<String, Object> createCalendar(@RequestBody MyCalendar newCalendar) throws RestException {
 		try {
 			MyCalendar res = persistenceServices.createCalendar(newCalendar);
-			if(res != null)
+			if (res != null)
 
 				return Response.successResponse(res);
 			return Response.errorResponse(Constants.ERROR_CREATE_CALENDAR);
@@ -158,6 +161,18 @@ public class MatBesController extends ExceptionHandlerController {
 			if (persistenceServices.changeUserData(user))
 				return Response.emptyResponse();
 			return Response.errorResponse(Constants.ERROR_CHANGE_USER_DATA);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_SET_CLIENT, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> setClient(@RequestBody Slot slot) throws RestException {
+		try {
+			if(persistenceServices.setClientToSlot(slot))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_FIND_PERSON);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}

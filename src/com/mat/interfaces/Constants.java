@@ -8,11 +8,11 @@ public interface Constants {
 	String ERROR_REPEAT = "";
 	String ERROR_CREATE_CALENDAR = "Error to create new Calendar";
 	String ERROR_REMOVE_CALENDAR = "Current calendar has not been not found";
-	
 	String ERROR_GET_WEEK = "There are no slots in the current week";
 	String ERROR_EDIT_CALENDAR = "Error editing calendar";
 	String ERROR_CREATE_CALENDAR_COLLABORATED = "Error creating collaborated calendar";
 	String ERROR_CHANGE_USER_DATA = "Error changing User data";
+	String ERROR_FIND_PERSON = "Current person has not been found";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -24,12 +24,11 @@ public interface Constants {
 	String REQUEST_CREATE_CALENDAR = "/createCalendar";
 	String REQUEST_GET_WEEK = "/getWeek";
 	String REQUEST_EDIT_CALENDAR = "/editCalendar";
+	String REQUEST_CREATE_CALENDAR_COLLABORATED = "/createCollaboratedCal";
+	String REQUEST_CHANGE_USER_DATA = "/changeData";
+	String REQUEST_SET_CLIENT = "/setClient";
+
 
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
-	String REQUEST_CREATE_CALENDAR_COLLABORATED = "/createCollaboratedCal";
-	String REQUEST_CHANGE_USER_DATA = "/changeData";
-	
-	
-
 }
