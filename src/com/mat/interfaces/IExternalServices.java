@@ -5,9 +5,9 @@ import java.util.*;
 import com.mat.json.*;
 
 public interface IExternalServices {
-	void setCredential(int userId, Scheduler scheduler, Credential credential);
+	void setCredential(int userId, Scheduler scheduler, MatCredential credential);
 
-	List<Scheduler> getAuthorizedSchedulers(int userId, List<Scheduler> schedulers) throws Throwable; // null
+	List<Scheduler> getAuthorizedSchedulers(int userId, List<Scheduler> schedulers) throws Throwable; 	// null
 																										// if
 																										// not
 																										// authorized?

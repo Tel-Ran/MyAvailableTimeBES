@@ -14,7 +14,6 @@ public class SchedulerDAO {
 
 	String schedulerName;
 	String accountName;
-	String token;
 
 	@ManyToOne
 	UserDAO user;
@@ -53,13 +52,5 @@ public class SchedulerDAO {
 
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 }
