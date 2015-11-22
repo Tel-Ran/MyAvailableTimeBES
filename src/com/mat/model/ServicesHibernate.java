@@ -350,4 +350,18 @@ public class ServicesHibernate implements IMatRepository {
 		}
 		return false;
 	}
+
+	@Override
+	@Transactional
+	public boolean removePerson(int id) {
+		PersonDAO personDao = em.find(PersonDAO.class, id);
+		List<SlotDAO> charedSlots = personDao.getSlotsShared();
+		List<SlotDAO> collaboratedSlots = personDao.getSlots();
+		if (charedSlots.size()==0 && collaboratedSlots.size()==0) {
+			em.remove(personDao);
+			return true;
+		}
+		return false;
+
+	}
 }

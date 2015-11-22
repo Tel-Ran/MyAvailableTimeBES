@@ -203,4 +203,17 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
+	
+	@RequestMapping(value = Constants.REQUEST_REMOVE_PERSON + "/{clientId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> removePerson(@PathVariable int clientId) throws RestException {
+		try {
+			if (persistenceServices.removePerson(clientId)) {
+				return Response.emptyResponse();	
+			}
+			return Response.errorResponse(Constants.ERROR_REMOVE_PERSON);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
 }
