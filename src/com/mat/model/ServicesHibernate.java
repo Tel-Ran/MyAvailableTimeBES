@@ -2,18 +2,14 @@ package com.mat.model;
 
 import java.util.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.*;
 
 import com.mat.dao.*;
 import com.mat.interfaces.*;
 import com.mat.json.*;
-import com.mat.mediator.ConvertorDaoToJson;
-import com.mat.mediator.ConvertorJsonToDao;
+import com.mat.mediator.*;
 
 public class ServicesHibernate implements IMatRepository {
 
@@ -71,13 +67,15 @@ public class ServicesHibernate implements IMatRepository {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * returns User with all calendars he has
+	 */
 	@Override
 	@Transactional
 	public User getCalendars(int userId) {
 		UserDAO userDao = em.find(UserDAO.class, userId);
 		Iterable<CalendarDAO> daoCalendarsList = userDao.getCalendars();
-
 		List<MyCalendar> calendars = new LinkedList<>();
 		for (CalendarDAO calendarDao : daoCalendarsList) {
 			MyCalendar temp = new MyCalendar();
@@ -142,6 +140,10 @@ public class ServicesHibernate implements IMatRepository {
 		return newCalendar;
 	}
 
+	
+	/**
+	 * removes all slots in specified calendar from DB, then removes calendar from DB. 
+	 */
 	@Override
 	@Transactional
 	public boolean removeCalendar(int id) {
@@ -163,10 +165,9 @@ public class ServicesHibernate implements IMatRepository {
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
 
-		Query q = em
-				.createQuery(
-						"select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
+		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, calendarId)
+				.setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
 
 		List<SlotDAO> slotsWeekDAO = q.getResultList();
@@ -293,4 +294,53 @@ public class ServicesHibernate implements IMatRepository {
 //	public boolean removeClientFromSlot(int slotId){
 //		
 //	}
+	
+	/**
+	 * repeats calendar's slots of CURRENT WEEK until specified date 
+	 */
+	@Override
+	@Transactional
+	public boolean repeatCalendar(MyCalendar calendar, Date date) {
+		CalendarDAO calDao = em.find(CalendarDAO.class, calendar.getCalendarId());
+		if (calDao != null) {
+			Calendar javaCalendar = new GregorianCalendar();
+			Calendar firstDayOfWeek = new GregorianCalendar();
+			Calendar lastDayOfWeek = new GregorianCalendar();
+			javaCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+			firstDayOfWeek.setFirstDayOfWeek(Calendar.MONDAY);
+			lastDayOfWeek.setFirstDayOfWeek(Calendar.MONDAY);
+			firstDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			lastDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			Date weekBegin = new Date(firstDayOfWeek.getTimeInMillis());
+			Date weekEnd = new Date(lastDayOfWeek.getTimeInMillis());
+			List<SlotDAO> slots = calDao.getSlots();
+			List<SlotDAO> slotsOfCurrentWeek = new LinkedList<SlotDAO>();
+			for (SlotDAO slot : slots) {
+				if (slot.getBeginning().compareTo(weekEnd) > 0) {
+					em.remove(slot);
+				}
+				if (slot.getBeginning().compareTo(weekBegin) >= 0 && slot.getBeginning().compareTo(weekEnd) <= 0) {
+					slotsOfCurrentWeek.add(slot);
+				}
+			}
+			for (SlotDAO slot : slotsOfCurrentWeek) {
+				javaCalendar.setTime(slot.getBeginning());
+				javaCalendar.add(Calendar.DATE, 7);
+				while (javaCalendar.getTime().compareTo(date) < 0) {
+					SlotDAO newSlot = new SlotDAO();
+					newSlot.setBeginning(javaCalendar.getTime());
+					newSlot.setCalendar(calDao);
+					newSlot.setClient(slot.getClient());
+					newSlot.setMessageBar(slot.getMessageBar());
+					StatusDAO newStatus = new StatusDAO();
+					newStatus.setConfirmation(0);
+					newStatus.setStatusName(Constants.STATUS_GREEN);
+					newSlot.setStatus(newStatus);
+					em.persist(newSlot);
+					javaCalendar.add(Calendar.DATE, 7);
+				}
+			}
+		}
+		return false;
+	}
 }

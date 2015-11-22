@@ -2,13 +2,11 @@ package com.mat.interfaces;
 
 
 
-import com.mat.json.AddressBook;
-import com.mat.json.MyCalendar;
-import com.mat.json.Person;
-import com.mat.json.Slot;
-import com.mat.json.User;
+import java.util.*;
+import com.mat.json.*;
 
 public interface IMatRepository {
+	
 	boolean createUser(User user);
 
 	User loginUser(User user);
@@ -32,5 +30,7 @@ public interface IMatRepository {
 	boolean changeUserData(User user);
 
 	boolean setClientToSlot(Slot slot);
+	
+	boolean repeatCalendar(MyCalendar calendar, Date date);
 
 }

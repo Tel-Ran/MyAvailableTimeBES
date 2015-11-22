@@ -2,7 +2,6 @@ package com.mat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import com.mat.json.AddressBook;
@@ -15,6 +14,7 @@ import com.mat.response.Response;
 import com.mat.exception.RestException;
 import com.mat.interfaces.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -170,9 +170,23 @@ public class MatBesController extends ExceptionHandlerController {
 	@ResponseBody
 	public Map<String, Object> setClient(@RequestBody Slot slot) throws RestException {
 		try {
-			if(persistenceServices.setClientToSlot(slot))
+			if (persistenceServices.setClientToSlot(slot))
 				return Response.emptyResponse();
 			return Response.errorResponse(Constants.ERROR_FIND_PERSON);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_REPEAT_CALENDAR + "/{dateString}", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> repeatCalendar(@PathVariable String dateString, @RequestBody MyCalendar myCalendar) throws RestException {
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = df.parse(dateString);
+			if (persistenceServices.repeatCalendar(myCalendar, date))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_REPEAT_CALENDAR);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}
