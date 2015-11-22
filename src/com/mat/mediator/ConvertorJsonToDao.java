@@ -27,11 +27,8 @@ public class ConvertorJsonToDao {
 			return null;
 		SlotDAO slotDao = new SlotDAO();
 		slotDao.setBeginning(slot.getBeginning());
-		slotDao.setClient(convertClient(slot.getClient()));
 		slotDao.setMessageBar(slot.getMessageBar());
 		slotDao.setStatus(convertStatus(slot.getStatus()));
-		slotDao.setParticipants(convertParticipants(slot.getParticipants()));
-
 		return slotDao;
 	}
 

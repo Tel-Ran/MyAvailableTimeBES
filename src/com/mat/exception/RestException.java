@@ -1,7 +1,7 @@
 package com.mat.exception;
 
 @SuppressWarnings("serial")
-public class RestException extends Exception {
+public class RestException extends Throwable {
 
     public RestException() {
     }

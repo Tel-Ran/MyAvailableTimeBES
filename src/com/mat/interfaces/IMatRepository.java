@@ -5,6 +5,7 @@ package com.mat.interfaces;
 import com.mat.json.AddressBook;
 import com.mat.json.MyCalendar;
 import com.mat.json.Person;
+import com.mat.json.Slot;
 import com.mat.json.User;
 
 public interface IMatRepository {
@@ -26,8 +27,12 @@ public interface IMatRepository {
 
 	boolean editCalendar(MyCalendar myCalendar);
 
+
 	MyCalendar createCollaborationCal(MyCalendar myCalendar);
 
 	boolean changeUserData(User user);
+
+	void setClientToSlot(Slot slot);
+
 
 }

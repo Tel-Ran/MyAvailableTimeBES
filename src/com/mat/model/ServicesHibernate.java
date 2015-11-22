@@ -162,19 +162,15 @@ public class ServicesHibernate implements IMatRepository {
 	@Transactional
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
-
-		Query q = em
-				.createQuery(
-						"select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
+		
+		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, calendarId)
+				.setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
 
 		List<SlotDAO> slotsWeekDAO = q.getResultList();
 		List<Slot> slotsWeekJson = ConvertorDaoToJson.getSlots(slotsWeekDAO);
 		CalendarDAO calendarDAO = em.find(CalendarDAO.class, calendarId);// calendar
-																			// from
-																			// the
-																			// Database
 		MyCalendar myCalendar = new MyCalendar();// new calendar creating
 
 		myCalendar.setCalendarId(calendarId);
@@ -210,6 +206,7 @@ public class ServicesHibernate implements IMatRepository {
 		return res;
 	}
 
+	// This method changes/creates only slots are in a common calendar, neither in a calendar for collaboration.
 	@Override
 	@Transactional
 	public boolean editCalendar(MyCalendar myCalendarJson) {
@@ -222,10 +219,8 @@ public class ServicesHibernate implements IMatRepository {
 				em.persist(newSlotDAO);
 			} else {
 				SlotDAO oldSlotDAO = em.find(SlotDAO.class, slot.getId());
-				oldSlotDAO.setClient(ConvertorJsonToDao.convertClient(slot.getClient()));
 				oldSlotDAO.setMessageBar(slot.getMessageBar());
 				oldSlotDAO.setStatus(ConvertorJsonToDao.convertStatus(slot.getStatus()));
-				oldSlotDAO.setParticipants(ConvertorJsonToDao.convertParticipants(slot.getParticipants()));
 			}
 		}
 		return true;
@@ -280,5 +275,13 @@ public class ServicesHibernate implements IMatRepository {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	@Transactional
+	public void setClientToSlot(Slot slot){
+		SlotDAO slotDAO = em.find(SlotDAO.class, slot.getId());
+		PersonDAO clientDAO = em.find(PersonDAO.class, slot.getClient().getId());
+		slotDAO.setClient(clientDAO);
 	}
 }

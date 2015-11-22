@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mat.json.AddressBook;
 import com.mat.json.MyCalendar;
 import com.mat.json.Person;
+import com.mat.json.Scheduler;
 import com.mat.json.User;
 import com.mat.response.Response;
 import com.mat.exception.RestException;
@@ -40,10 +41,13 @@ public class MatBesController extends ExceptionHandlerController {
 	public Map<String, Object> loginUser(@RequestBody User user) throws RestException {
 		try {
 			User res;
-			if ((res = persistenceServices.loginUser(user)) != null)
+			if ((res = persistenceServices.loginUser(user)) != null){
+				List<Scheduler> schedulers = externalServices.getAuthorizedSchedulers(res.getUserId(), res.getSchedulers());
+				res.setSchedulers(schedulers);
 				return Response.successResponse(res);
+			}
 			return Response.errorResponse(Constants.ERROR_LOGIN);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RestException(e);
 		}
 	}

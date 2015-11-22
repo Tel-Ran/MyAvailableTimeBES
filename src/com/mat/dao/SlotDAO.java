@@ -18,10 +18,10 @@ public class SlotDAO {
 	@Embedded
 	StatusDAO status;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	List<PersonDAO> participants;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	PersonDAO client;
 	String messageBar;
 
