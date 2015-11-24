@@ -37,4 +37,8 @@ public interface IMatRepository {
 	
 	boolean removePerson(int id);
 
+	List<Scheduler> getScheduler(int userId);
+
+	boolean addImportedPersons(AddressBook book);
+
 }

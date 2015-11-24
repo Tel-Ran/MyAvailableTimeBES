@@ -72,4 +72,15 @@ public class ConvertorDaoToJson {
 		myCalendar.setSlots(getSlots(calendarDao.getSlots()));
 		return myCalendar;
 	}
+
+	public static List<Scheduler> getScheduller(List<SchedulerDAO> shedullerDao) {
+		List<Scheduler> schedulers = new LinkedList<Scheduler>();
+		for (SchedulerDAO sh : shedullerDao) {
+			Scheduler scheduler = new Scheduler();
+			scheduler.setAccountName(sh.getAccountName());
+			scheduler.setSchedulerName(sh.getSchedulerName());
+			schedulers.add(scheduler);
+		}
+		return schedulers;
+	}
 }
