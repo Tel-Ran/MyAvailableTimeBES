@@ -4,6 +4,9 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 public class CalendarDAO {
 
@@ -21,6 +24,7 @@ public class CalendarDAO {
 	int duration;
 
 	@OneToMany(mappedBy = "calendar")
+	@Cascade(value = CascadeType.DELETE)
 	List<SlotDAO> slots;
 
 	public CalendarDAO() {
