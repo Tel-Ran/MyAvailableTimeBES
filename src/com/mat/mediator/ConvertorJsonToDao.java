@@ -2,7 +2,6 @@ package com.mat.mediator;
 
 import com.mat.dao.*;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
