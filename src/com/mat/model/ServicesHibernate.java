@@ -365,11 +365,12 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public List<Scheduler> getScheduler(int userId) {
-		UserDAO userDao = em.find(UserDAO.class, userId);
-		List<SchedulerDAO> shedullerDao = userDao.getShedullers();
+		Query query = em.createQuery("select sch from SchedulerDAO sch where sch.user.id = ?1").setParameter(1, userId);
+		List<SchedulerDAO> shedullerDao = query.getResultList();
 		List<Scheduler> scheduler = ConvertorDaoToJson.getScheduller(shedullerDao);
 		return scheduler;
 	}
@@ -386,5 +387,4 @@ public class ServicesHibernate implements IMatRepository {
 		}
 		return false;
 	}
-
 }
