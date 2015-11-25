@@ -177,7 +177,7 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
+
 	@RequestMapping(value = Constants.REQUEST_REMOVE_CLIENT + "/{slotId}", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> removeClient(@PathVariable int slotId) throws RestException {
@@ -192,7 +192,8 @@ public class MatBesController extends ExceptionHandlerController {
 
 	@RequestMapping(value = Constants.REQUEST_REPEAT_CALENDAR + "/{dateString}", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> repeatCalendar(@PathVariable String dateString, @RequestBody MyCalendar myCalendar) throws RestException {
+	public Map<String, Object> repeatCalendar(@PathVariable String dateString, @RequestBody MyCalendar myCalendar)
+			throws RestException {
 		try {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = df.parse(dateString);
@@ -203,15 +204,59 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
+
 	@RequestMapping(value = Constants.REQUEST_REMOVE_PERSON + "/{clientId}", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> removePerson(@PathVariable int clientId) throws RestException {
 		try {
 			if (persistenceServices.removePerson(clientId)) {
-				return Response.emptyResponse();	
+				return Response.emptyResponse();
 			}
 			return Response.errorResponse(Constants.ERROR_REMOVE_PERSON);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_SCHEDULERS, method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getSchedulers(@PathVariable int userId) throws RestException {
+		try {
+			List<Scheduler> schedulers = persistenceServices.getScheduler(userId);
+			List<Scheduler> schedullersAuthorized = externalServices.getAuthorizedSchedulers(userId, schedulers);
+			if (schedullersAuthorized != null) {
+				return Response.successResponse(schedullersAuthorized);
+			}
+			return Response.errorResponse(Constants.ERROR_GET_SHEDULERS);
+		} catch (Throwable e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_PERSONS, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPersons(@PathVariable User user) throws RestException {
+		// User object in argument should be with List<Schedulers> which are
+		// authorized.
+		try {
+			List<Scheduler> schedulersAuthorized = user.getSchedulers();
+			if (schedulersAuthorized != null) {
+				List<Person> persons = externalServices.getContacts(user.getUserId(), schedulersAuthorized);
+				return Response.successResponse(persons);
+			}
+			return Response.errorResponse(Constants.ERROR_FIND_PERSON);
+		} catch (Throwable e) {
+			throw new RestException(e);
+		}
+	}
+
+	@RequestMapping(value = Constants.REQUEST_ADD_IMPORTED_PRSONS, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> addImportedPersons(@PathVariable AddressBook book) throws RestException {
+		try {
+			if (persistenceServices.addImportedPersons(book))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_ADD_IMPORTED_PERSON);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}

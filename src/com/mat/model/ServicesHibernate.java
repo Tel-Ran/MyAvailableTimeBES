@@ -67,7 +67,7 @@ public class ServicesHibernate implements IMatRepository {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * returns User with all calendars he has
 	 */
@@ -140,9 +140,9 @@ public class ServicesHibernate implements IMatRepository {
 		return newCalendar;
 	}
 
-	
 	/**
-	 * removes all slots in specified calendar from DB, then removes calendar from DB. 
+	 * removes all slots in specified calendar from DB, then removes calendar
+	 * from DB.
 	 */
 	@Override
 	@Transactional
@@ -165,9 +165,10 @@ public class ServicesHibernate implements IMatRepository {
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
 
-		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, calendarId)
-				.setParameter(2, startEndDates.get(0))
+		Query q = em
+				.createQuery(
+						"select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
 
 		List<SlotDAO> slotsWeekDAO = q.getResultList();
@@ -290,10 +291,10 @@ public class ServicesHibernate implements IMatRepository {
 		slotDAO.setClient(clientDAO);
 		return true;
 	}
-	
+
 	@Override
 	@Transactional
-	public boolean removeClientFromSlot(int slotId){
+	public boolean removeClientFromSlot(int slotId) {
 		SlotDAO slotDAO = em.find(SlotDAO.class, slotId);
 		PersonDAO client = slotDAO.getClient();
 		if (client == null)
@@ -301,9 +302,9 @@ public class ServicesHibernate implements IMatRepository {
 		em.remove(client);
 		return true;
 	}
-	
+
 	/**
-	 * repeats calendar's slots of CURRENT WEEK until specified date 
+	 * repeats calendar's slots of CURRENT WEEK until specified date
 	 */
 	@Override
 	@Transactional
@@ -357,11 +358,33 @@ public class ServicesHibernate implements IMatRepository {
 		PersonDAO personDao = em.find(PersonDAO.class, id);
 		List<SlotDAO> charedSlots = personDao.getSlotsShared();
 		List<SlotDAO> collaboratedSlots = personDao.getSlots();
-		if (charedSlots.size()==0 && collaboratedSlots.size()==0) {
+		if (charedSlots.size() == 0 && collaboratedSlots.size() == 0) {
 			em.remove(personDao);
 			return true;
 		}
 		return false;
-
 	}
+
+	@Override
+	@Transactional
+	public List<Scheduler> getScheduler(int userId) {
+		UserDAO userDao = em.find(UserDAO.class, userId);
+		List<SchedulerDAO> shedullerDao = userDao.getShedullers();
+		List<Scheduler> scheduler = ConvertorDaoToJson.getScheduller(shedullerDao);
+		return scheduler;
+	}
+
+	@Override
+	@Transactional
+	public boolean addImportedPersons(AddressBook book) {
+		List<Person> persons = book.getPersons();
+		if (persons != null) {
+			for (Person p : persons) {
+				addPersonToAddressBook(p);
+			}
+			return true;
+		}
+		return false;
+	}
+
 }
