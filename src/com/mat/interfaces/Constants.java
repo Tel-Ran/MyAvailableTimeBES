@@ -31,9 +31,13 @@ public interface Constants {
 	String REQUEST_SET_CLIENT = "/setClient";
 	String REQUEST_REMOVE_CLIENT = "/removeClient";
 	String REQUEST_REMOVE_PERSON = "/removePerson";
-
+	String REQUEST_SET_PARTICIPANTS = "setParticipants";
+	
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
-	String STATUS_GREEN = "green";
+	
+	String MAP_SLOT_LIST = "slots";
+	String MAP_PERSON_LIST = "persons";
+	
 
 }

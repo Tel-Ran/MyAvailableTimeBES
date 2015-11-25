@@ -216,4 +216,18 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
+	
+	@RequestMapping(value = Constants.REQUEST_SET_PARTICIPANTS + "/{calendarId}", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> setParticipantsToSlots(@PathVariable int calendarId, @RequestBody LinkedHashMap<String, List<?>> slotsAndParticipants) throws RestException {
+		try {
+			if (persistenceServices.setParticipantsToSlots(calendarId, slotsAndParticipants)) {
+				return Response.emptyResponse();	
+			}
+			return Response.errorResponse(Constants.ERROR_REMOVE_PERSON);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+	
 }

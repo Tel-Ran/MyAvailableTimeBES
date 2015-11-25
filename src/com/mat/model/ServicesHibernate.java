@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import org.springframework.transaction.annotation.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mat.dao.*;
 import com.mat.interfaces.*;
 import com.mat.json.*;
@@ -149,10 +150,6 @@ public class ServicesHibernate implements IMatRepository {
 	public boolean removeCalendar(int id) {
 		CalendarDAO cal = em.find(CalendarDAO.class, id);
 		if (cal != null) {
-			List<SlotDAO> slots = cal.getSlots();
-			for (SlotDAO slot : slots) {
-				em.remove(slot);
-			}
 			em.remove(cal);
 			return true;
 		}
@@ -341,7 +338,7 @@ public class ServicesHibernate implements IMatRepository {
 					newSlot.setMessageBar(slot.getMessageBar());
 					StatusDAO newStatus = new StatusDAO();
 					newStatus.setConfirmation(0);
-					newStatus.setStatusName(Constants.STATUS_GREEN);
+					newStatus.setStatusName(Constants.SLOT_STATUS_FREE);
 					newSlot.setStatus(newStatus);
 					em.persist(newSlot);
 					javaCalendar.add(Calendar.DATE, 7);
@@ -363,5 +360,45 @@ public class ServicesHibernate implements IMatRepository {
 		}
 		return false;
 
+	}
+	
+	/**
+	 * Adds all participants to all slots in LinkedHashMap to Calendar with ID, specified as URL parameter @see src/com/mat/controller/MatBesController.java
+	 * @param int calendarId
+	 * @param LinkedHashMap<String, List>
+	 * This Map contains one list of <json.Slot> slots and one list of <json.Person> persons
+	 * stored in Map with constants MAP_SLOT_LIST = "slots" and MAP_PERSON_LIST = "persons" respectively 
+	 */
+	@Override
+	@Transactional
+	public boolean setParticipantsToSlots(int calendarId, LinkedHashMap<String, List<?>> slotsAndParticipants) {
+		ObjectMapper om = new ObjectMapper();
+		List<Person> personList = new LinkedList<>();
+		List<Slot> slotList = new LinkedList<>();
+		for (Object pers : slotsAndParticipants.get(Constants.MAP_PERSON_LIST)) {
+			Person person = om.convertValue(pers, Person.class);
+			personList.add(person);
+		}
+		for (Object slott : slotsAndParticipants.get(Constants.MAP_SLOT_LIST)) {
+			Slot slot = om. convertValue(slott, Slot.class);
+			slotList.add(slot);
+		}
+		
+		List<SlotDAO> slotListDao = ConvertorJsonToDao.getSlotsDAO(slotList);
+		for (SlotDAO slot : slotListDao) {
+			CalendarDAO cal = new CalendarDAO();
+			cal.setId(calendarId);
+			slot.setCalendar(cal);
+		}
+		List<PersonDAO> personListDao = ConvertorJsonToDao.convertParticipants(personList);
+		
+		if (slotListDao.size() == 0 || slotListDao.get(0).getCalendar().getId() != Constants.CALENDAR_TYPE_COLLABORATED) {
+			return false;
+		}
+		for (SlotDAO slotDao : slotListDao) {
+			slotDao.setParticipants(personListDao);
+			em.persist(slotDao);
+		}
+		return true;
 	}
 }

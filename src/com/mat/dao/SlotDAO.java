@@ -8,6 +8,11 @@ import javax.persistence.*;
 @Entity
 public class SlotDAO {
 
+	@Override
+	public String toString() {
+		return "SlotDAO [id=" + id + ", beginning=" + beginning + ", client=" + client.getId() + ", messageBar=" + messageBar + "]";
+	}
+
 	@Id
 	@GeneratedValue
 	int id;
@@ -18,10 +23,10 @@ public class SlotDAO {
 	@Embedded
 	StatusDAO status;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	List<PersonDAO> participants;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	PersonDAO client;
 	String messageBar;
 
