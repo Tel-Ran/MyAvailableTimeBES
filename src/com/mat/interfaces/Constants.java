@@ -15,6 +15,7 @@ public interface Constants {
 	String ERROR_FIND_PERSON = "Current person has not been found";
 	String ERROR_REMOVE_CLIENT = "there is no client to this slot";
 	String ERROR_REMOVE_PERSON = "This person is used by some collaboration or sharing";
+	String ERROR_SET_PARTICIPANTS = "Unable to add participants to specified Slot";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -38,6 +39,5 @@ public interface Constants {
 	
 	String MAP_SLOT_LIST = "slots";
 	String MAP_PERSON_LIST = "persons";
-	
 
 }

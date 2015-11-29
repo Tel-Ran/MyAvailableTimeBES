@@ -224,7 +224,7 @@ public class MatBesController extends ExceptionHandlerController {
 			if (persistenceServices.setParticipantsToSlots(calendarId, slotsAndParticipants)) {
 				return Response.emptyResponse();	
 			}
-			return Response.errorResponse(Constants.ERROR_REMOVE_PERSON);
+			return Response.errorResponse(Constants.ERROR_SET_PARTICIPANTS);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}

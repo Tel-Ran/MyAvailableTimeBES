@@ -23,10 +23,10 @@ public class SlotDAO {
 	@Embedded
 	StatusDAO status;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	List<PersonDAO> participants;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	PersonDAO client;
 	String messageBar;
 
@@ -40,10 +40,6 @@ public class SlotDAO {
 
 	public int getId() {
 		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public StatusDAO getStatus() {

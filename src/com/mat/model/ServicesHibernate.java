@@ -373,31 +373,37 @@ public class ServicesHibernate implements IMatRepository {
 	@Transactional
 	public boolean setParticipantsToSlots(int calendarId, LinkedHashMap<String, List<?>> slotsAndParticipants) {
 		ObjectMapper om = new ObjectMapper();
-		List<Person> personList = new LinkedList<>();
-		List<Slot> slotList = new LinkedList<>();
+		List<Person> personListJson = new LinkedList<>();
+		List<Slot> slotListJson = new LinkedList<>();
+		// Check the type of Calendar in DB (whether it is available for Collaboration)
+		if (em.find(CalendarDAO.class, calendarId).getTypeCalendar() != Constants.CALENDAR_TYPE_COLLABORATED)
+			return false;
+		
 		for (Object pers : slotsAndParticipants.get(Constants.MAP_PERSON_LIST)) {
 			Person person = om.convertValue(pers, Person.class);
-			personList.add(person);
+			personListJson.add(person);
 		}
 		for (Object slott : slotsAndParticipants.get(Constants.MAP_SLOT_LIST)) {
 			Slot slot = om. convertValue(slott, Slot.class);
-			slotList.add(slot);
+			slotListJson.add(slot);
 		}
-		
-		List<SlotDAO> slotListDao = ConvertorJsonToDao.getSlotsDAO(slotList);
-		for (SlotDAO slot : slotListDao) {
-			CalendarDAO cal = new CalendarDAO();
-			cal.setId(calendarId);
-			slot.setCalendar(cal);
+		List<PersonDAO> personListDao = new LinkedList<>();
+		for (Person person : personListJson) {
+			PersonDAO personDao = em.find(PersonDAO.class, person.getId());
+			personListDao.add(personDao);
 		}
-		List<PersonDAO> personListDao = ConvertorJsonToDao.convertParticipants(personList);
-		
-		if (slotListDao.size() == 0 || slotListDao.get(0).getCalendar().getId() != Constants.CALENDAR_TYPE_COLLABORATED) {
-			return false;
-		}
-		for (SlotDAO slotDao : slotListDao) {
-			slotDao.setParticipants(personListDao);
-			em.persist(slotDao);
+		for (Slot slot : slotListJson) {
+			SlotDAO slotDao = em.find(SlotDAO.class, slot.getId()); 
+			if (slotDao != null) {
+				slotDao.setParticipants(personListDao);
+			}
+			else {
+				slotDao = ConvertorJsonToDao.convertSlot(slot);
+				CalendarDAO cal = em.find(CalendarDAO.class, calendarId);
+				slotDao.setCalendar(cal);
+				slotDao.setParticipants(personListDao);
+				em.persist(slotDao);
+			}
 		}
 		return true;
 	}
