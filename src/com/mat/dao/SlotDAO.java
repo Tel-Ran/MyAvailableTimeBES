@@ -8,6 +8,11 @@ import javax.persistence.*;
 @Entity
 public class SlotDAO {
 
+	@Override
+	public String toString() {
+		return "SlotDAO [id=" + id + ", beginning=" + beginning + ", client=" + client.getId() + ", messageBar=" + messageBar + "]";
+	}
+
 	@Id
 	@GeneratedValue
 	int id;
@@ -35,10 +40,6 @@ public class SlotDAO {
 
 	public int getId() {
 		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public StatusDAO getStatus() {

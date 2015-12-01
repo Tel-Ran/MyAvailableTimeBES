@@ -36,6 +36,8 @@ public interface IMatRepository {
 	boolean removeClientFromSlot(int slotId);
 	
 	boolean removePerson(int id);
+	
+	boolean setParticipantsToSlots(int calendarId, LinkedHashMap<String, List<?>> slotsAndParticipants);
 
 	List<Scheduler> getScheduler(int userId);
 

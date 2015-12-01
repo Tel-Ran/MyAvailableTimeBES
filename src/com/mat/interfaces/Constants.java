@@ -18,6 +18,7 @@ public interface Constants {
 	String ERROR_GET_SHEDULERS = "Error getting shedullers";
 	String ERROR_ADD_IMPORTED_PERSON = "Error adding imported Persons";
 	
+	String ERROR_SET_PARTICIPANTS = "Unable to add participants to specified Slot";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -37,13 +38,13 @@ public interface Constants {
 	String REQUEST_SCHEDULERS = "/getSchedulers";	
 	String REQUEST_PERSONS = "/getPersons";
 	String REQUEST_ADD_IMPORTED_PRSONS = "/addImportedPersons";
+	String REQUEST_SET_PARTICIPANTS = "setParticipants";
 	
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
 	String STATUS_GREEN = "green";
 	
-	
-	
-	
+	String MAP_SLOT_LIST = "slots";
+	String MAP_PERSON_LIST = "persons";
 
 }
