@@ -43,4 +43,10 @@ public interface IMatRepository {
 
 	boolean addImportedPersons(AddressBook book);
 
+	boolean addScheduler(Scheduler entry);
+
+	boolean editScheduler(Scheduler scheduler);
+
+	boolean removeScheduler(int id);
+
 }

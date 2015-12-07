@@ -261,18 +261,56 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-	
+
 	@RequestMapping(value = Constants.REQUEST_SET_PARTICIPANTS + "/{calendarId}", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> setParticipantsToSlots(@PathVariable int calendarId, @RequestBody LinkedHashMap<String, List<?>> slotsAndParticipants) throws RestException {
 		try {
 			if (persistenceServices.setParticipantsToSlots(calendarId, slotsAndParticipants)) {
-				return Response.emptyResponse();	
+				return Response.emptyResponse();
 			}
 			return Response.errorResponse(Constants.ERROR_SET_PARTICIPANTS);
 		} catch (Exception e) {
 			throw new RestException(e);
 		}
 	}
+
+	// -----------Scheduler-----------
+
+	@RequestMapping(value = Constants.REQUEST_ADD_SCHEDULER, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> addScheduler(@RequestBody Scheduler scheduler) throws RestException {
+		try {
+			if(persistenceServices.addScheduler(scheduler))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_ADD_SCHEDULER);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
 	
+	@RequestMapping(value = Constants.REQUEST_EDIT_SCHEDULER, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> editScheduler(@RequestBody Scheduler scheduler) throws RestException{
+		try {
+			if(persistenceServices.editScheduler(scheduler))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_EDIT_SCHEDULER);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+	
+	@RequestMapping(value = Constants.REQUEST_REMOVE_SCHEDULER + "/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> removeScheduler(@PathVariable int id) throws RestException{
+		try {
+			if(persistenceServices.removeScheduler(id))
+				return Response.emptyResponse();
+			return Response.errorResponse(Constants.ERROR_REMOVE_SCHEDULER);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+
 }

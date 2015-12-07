@@ -410,9 +410,51 @@ public class ServicesHibernate implements IMatRepository {
 		List<Scheduler> scheduler = ConvertorDaoToJson.getScheduller(shedullerDao);
 		return scheduler;
 	}
-
+	
 	/**
-	 * adds the persons obtained from a Database
+	 * method adds new entry to the schedulers list of the user 
+	 */
+	@Override
+	@Transactional
+	public boolean addScheduler(Scheduler entry){
+		int userId = entry.getUserId();
+		UserDAO user = em.find(UserDAO.class, userId);
+		if(user == null)
+			return false;
+		
+		SchedulerDAO entryDAO = new SchedulerDAO();
+		entryDAO.setAccountName(entry.getAccountName());
+		entryDAO.setSchedulerName(entry.getSchedulerName());
+		entryDAO.setUser(user);
+		return true;
+	}
+	
+	/**
+	 * method edits current scheduler
+	 */
+	@Override
+	@Transactional
+	public boolean editScheduler(Scheduler scheduler){
+		SchedulerDAO entity = em.find(SchedulerDAO.class, scheduler.getId());
+		if(entity == null)
+			return false;
+		entity.setAccountName(scheduler.getAccountName());
+		entity.setSchedulerName(scheduler.getSchedulerName());
+		return true;
+	}
+	
+	@Override
+	@Transactional
+	public boolean removeScheduler(int id){
+		SchedulerDAO entity = em.find(SchedulerDAO.class, id);
+		if(entity == null)
+			return false;
+		em.remove(entity);
+		return true;
+	}
+	
+	/**
+	 * method adds the persons obtained from a Database
 	 */
 	@Override
 	@Transactional

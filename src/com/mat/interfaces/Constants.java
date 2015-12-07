@@ -17,7 +17,9 @@ public interface Constants {
 	String ERROR_REMOVE_PERSON = "This person is used by some collaboration or sharing";
 	String ERROR_GET_SHEDULERS = "Error getting shedullers";
 	String ERROR_ADD_IMPORTED_PERSON = "Error adding imported Persons";
-	
+	String ERROR_ADD_SCHEDULER = "Such a user is not found";
+	String ERROR_EDIT_SCHEDULER = "Such a scheduler is not found";
+	String ERROR_REMOVE_SCHEDULER = "Such a scheduler is not found";
 	String ERROR_SET_PARTICIPANTS = "Unable to add participants to specified Slot";
 	
 	String REQUEST_LOGIN = "/login";
@@ -38,7 +40,10 @@ public interface Constants {
 	String REQUEST_SCHEDULERS = "/getSchedulers";	
 	String REQUEST_PERSONS = "/getPersons";
 	String REQUEST_ADD_IMPORTED_PRSONS = "/addImportedPersons";
-	String REQUEST_SET_PARTICIPANTS = "setParticipants";
+	String REQUEST_SET_PARTICIPANTS = "/setParticipants";
+	String REQUEST_ADD_SCHEDULER = "/addScheduler";
+	String REQUEST_EDIT_SCHEDULER = "/editScheduler";
+	String REQUEST_REMOVE_SCHEDULER = "/removeScheduler";
 	
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
@@ -46,5 +51,7 @@ public interface Constants {
 	
 	String MAP_SLOT_LIST = "slots";
 	String MAP_PERSON_LIST = "persons";
+	
+	
 
 }
