@@ -17,6 +17,9 @@ public class ServicesHibernate implements IMatRepository {
 	@PersistenceContext(unitName = "springHibernate")
 	public EntityManager em;
 
+	/**
+	 * Registration of new user.
+	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public boolean createUser(User user) {
@@ -35,7 +38,9 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
-	// login
+	/**
+	 * Login of the user. If there is no such a user in the Database, returns null.
+	 */
 	@Override
 	@Transactional
 	public User loginUser(User user) {
@@ -70,7 +75,7 @@ public class ServicesHibernate implements IMatRepository {
 	}
 
 	/**
-	 * returns User with all calendars he has
+	 * Returns User with all the calendars he has.
 	 */
 	@Override
 	@Transactional
@@ -89,6 +94,9 @@ public class ServicesHibernate implements IMatRepository {
 		return res;
 	}
 
+	/**
+	 * Adding the person to the Address Book of the user.
+	 */
 	@Override
 	@Transactional
 	public boolean addPersonToAddressBook(Person person) {
@@ -110,6 +118,9 @@ public class ServicesHibernate implements IMatRepository {
 		return true;
 	}
 
+	/**
+	 * Return the Address Book of the user.
+	 */
 	@Override
 	@Transactional
 	public AddressBook getAddressBook(int userId) {
@@ -128,6 +139,9 @@ public class ServicesHibernate implements IMatRepository {
 		return res;
 	}
 
+	/**
+	 * Creates new calendar. 
+	 */
 	@Override
 	@Transactional
 	public MyCalendar createCalendar(MyCalendar newCalendar) {
@@ -156,16 +170,18 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	/**
+	 * Gets current week of the calendar from Database
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public MyCalendar getWeek(int calendarId, int weekNumber) {
 		List<Date> startEndDates = getStartEndDays(weekNumber);
 
-		Query q = em
-				.createQuery(
-						"select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
-				.setParameter(1, calendarId).setParameter(2, startEndDates.get(0))
+		Query q = em.createQuery("select slot from SlotDAO slot where slot.calendar.id = ?1 and slot.beginning > ?2 and slot.beginning < ?3")
+				.setParameter(1, calendarId)
+				.setParameter(2, startEndDates.get(0))
 				.setParameter(3, startEndDates.get(1));
 
 		List<SlotDAO> slotsWeekDAO = q.getResultList();
@@ -181,6 +197,11 @@ public class ServicesHibernate implements IMatRepository {
 		return myCalendar;
 	}
 
+	/**
+	 * this is the service method definition of the first and last days in a week.
+	 * @param weekNumber
+	 * @return
+	 */
 	private List<Date> getStartEndDays(int weekNumber) {
 		int coef = 7 * weekNumber;
 		List<Date> res = new ArrayList<Date>();
@@ -227,6 +248,9 @@ public class ServicesHibernate implements IMatRepository {
 		return true;
 	}
 
+	/**
+	 * creates new collaboration calendar based on the calendar from Database
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
@@ -262,6 +286,9 @@ public class ServicesHibernate implements IMatRepository {
 		return newCollaboratedCalendar;
 	}
 
+	/**
+	 * changes settings of the user
+	 */
 	@Override
 	@Transactional
 	public boolean changeUserData(User user) {
@@ -278,6 +305,9 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	/**
+	 * sets the client from Address Book to the slot (sharing) 
+	 */
 	@Override
 	@Transactional
 	public boolean setClientToSlot(Slot slot) {
@@ -289,6 +319,9 @@ public class ServicesHibernate implements IMatRepository {
 		return true;
 	}
 
+	/**
+	 * removes client from the slot
+	 */
 	@Override
 	@Transactional
 	public boolean removeClientFromSlot(int slotId) {
@@ -349,6 +382,9 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	/**
+	 * removes the person from the Address Book
+	 */
 	@Override
 	@Transactional
 	public boolean removePerson(int id) {
@@ -362,6 +398,9 @@ public class ServicesHibernate implements IMatRepository {
 		return false;
 	}
 
+	/**
+	 * returns the list of schedulers of the user
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
@@ -372,6 +411,9 @@ public class ServicesHibernate implements IMatRepository {
 		return scheduler;
 	}
 
+	/**
+	 * adds the persons obtained from a Database
+	 */
 	@Override
 	@Transactional
 	public boolean addImportedPersons(AddressBook book) {
