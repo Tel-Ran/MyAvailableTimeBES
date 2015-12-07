@@ -222,7 +222,7 @@ public class MatBesController extends ExceptionHandlerController {
 	@ResponseBody
 	public Map<String, Object> getSchedulers(@PathVariable int userId) throws RestException {
 		try {
-			List<Scheduler> schedulers = persistenceServices.getScheduler(userId);
+			List<Scheduler> schedulers = persistenceServices.getSchedulers(userId);
 			List<Scheduler> schedullersAuthorized = externalServices.getAuthorizedSchedulers(userId, schedulers);
 			if (schedullersAuthorized != null) {
 				return Response.successResponse(schedullersAuthorized);

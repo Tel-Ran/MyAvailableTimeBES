@@ -404,7 +404,7 @@ public class ServicesHibernate implements IMatRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
-	public List<Scheduler> getScheduler(int userId) {
+	public List<Scheduler> getSchedulers(int userId) {
 		Query query = em.createQuery("select sch from SchedulerDAO sch where sch.user.id = ?1").setParameter(1, userId);
 		List<SchedulerDAO> shedullerDao = query.getResultList();
 		List<Scheduler> scheduler = ConvertorDaoToJson.getScheduller(shedullerDao);

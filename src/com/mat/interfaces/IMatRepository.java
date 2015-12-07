@@ -39,7 +39,7 @@ public interface IMatRepository {
 	
 	boolean setParticipantsToSlots(int calendarId, LinkedHashMap<String, List<?>> slotsAndParticipants);
 
-	List<Scheduler> getScheduler(int userId);
+	List<Scheduler> getSchedulers(int userId);
 
 	boolean addImportedPersons(AddressBook book);
 
