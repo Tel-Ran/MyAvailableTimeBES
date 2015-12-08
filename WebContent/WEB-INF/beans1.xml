@@ -17,12 +17,16 @@
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
-
-	<bean id="persistenceServices" class="com.mat.model.ServicesHibernate"></bean>
+	
+	
+	<bean id="persistenceServices" class="com.mat.model.ServicesHibernate">
+		<property name="matSender" ref="matSender"></property>
+	</bean>
 	
 	<bean id="externalServices" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="http://localhost:8080/15_09_29_PersonService/persons_service.service"></property>
 		<property name="serviceInterface" value="com.mat.interfaces.IExternalServices"></property>
 	</bean>
-
+	
+	<import resource="mailSending.xml"/>
 </beans>

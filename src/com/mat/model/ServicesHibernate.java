@@ -6,16 +6,23 @@ import javax.persistence.*;
 
 import org.springframework.transaction.annotation.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
 import com.mat.dao.*;
 import com.mat.interfaces.*;
 import com.mat.json.*;
+import com.mat.mailsender.MatSender;
 import com.mat.mediator.*;
 
 public class ServicesHibernate implements IMatRepository {
 
 	@PersistenceContext(unitName = "springHibernate")
 	public EntityManager em;
+
+	public MatSender matSender;
+	
+	public void setMatSender(MatSender matSender) {
+		this.matSender = matSender;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -407,4 +414,20 @@ public class ServicesHibernate implements IMatRepository {
 		}
 		return true;
 	}
+	
+	@Override
+	@Transactional
+	public boolean activateUser(int userId) {
+		UserDAO userDao = em.find(UserDAO.class, userId);
+		if (userDao != null && userDao.isActivated() == Constants.USER_STATUS_NOT_ACTIVATED) {
+			String hashCode = String.valueOf(userDao.getEmail().hashCode()) + String.valueOf(userDao.getFirstName().hashCode()) + String.valueOf(userDao.getLastName().hashCode());
+			userDao.setHashForActivation(hashCode);
+			//if (matSender.sendMail(userDao, hashCode))
+			/*MatBesController.*/matSender.sendMail(userDao, hashCode);
+				return true;
+			//return false;
+		}
+		return false;
+	}
+	
 }

@@ -16,6 +16,7 @@ public interface Constants {
 	String ERROR_REMOVE_CLIENT = "there is no client to this slot";
 	String ERROR_REMOVE_PERSON = "This person is used by some collaboration or sharing";
 	String ERROR_SET_PARTICIPANTS = "Unable to add participants to specified Slot";
+	String ERROR_ACTIVATE_USER = "Error activating user";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -33,11 +34,16 @@ public interface Constants {
 	String REQUEST_REMOVE_CLIENT = "/removeClient";
 	String REQUEST_REMOVE_PERSON = "/removePerson";
 	String REQUEST_SET_PARTICIPANTS = "setParticipants";
+	String REQUEST_ACTIVATE_USER = "requestActivateUser";
 	
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
+	boolean USER_STATUS_ACTIVATED = true;
+	boolean USER_STATUS_NOT_ACTIVATED = false;
 	
 	String MAP_SLOT_LIST = "slots";
 	String MAP_PERSON_LIST = "persons";
-
+	String SERVER_MAT_URL = "http://myavailabletime.com";
+	String SERVER_MAT_ACTIVATE = "activate";
+	
 }

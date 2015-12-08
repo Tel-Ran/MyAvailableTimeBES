@@ -39,4 +39,6 @@ public interface IMatRepository {
 	
 	boolean setParticipantsToSlots(int calendarId, LinkedHashMap<String, List<?>> slotsAndParticipants);
 
+	boolean activateUser(int userId);
+
 }
