@@ -4,17 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.mat.json.AddressBook;
-import com.mat.json.MyCalendar;
-import com.mat.json.Person;
-import com.mat.json.Scheduler;
-import com.mat.json.Slot;
-import com.mat.json.User;
-import com.mat.response.Response;
-import com.mat.exception.RestException;
+import com.mat.json.*;
+import com.mat.response.*;
+import com.mat.exception.*;
 import com.mat.interfaces.*;
 
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
 
 @Controller
@@ -25,7 +20,8 @@ public class MatBesController extends ExceptionHandlerController {
 	IMatRepository persistenceServices;
 	@Autowired
 	IExternalServices externalServices;
-
+	
+	
 	@RequestMapping(value = Constants.REQUEST_CREATE_USER, method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> createUser(@RequestBody User user) throws RestException {
@@ -312,5 +308,18 @@ public class MatBesController extends ExceptionHandlerController {
 			throw new RestException(e);
 		}
 	}
-
+	
+	@RequestMapping(value = Constants.REQUEST_ACTIVATE_USER + "/{userId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> activateUser(@PathVariable int userId) throws RestException {
+		try {
+			if (persistenceServices.activateUser(userId)) {
+				return Response.emptyResponse();	
+			}
+			return Response.errorResponse(Constants.ERROR_ACTIVATE_USER);
+		} catch (Exception e) {
+			throw new RestException(e);
+		}
+	}
+	
 }

@@ -21,6 +21,7 @@ public interface Constants {
 	String ERROR_EDIT_SCHEDULER = "Such a scheduler is not found";
 	String ERROR_REMOVE_SCHEDULER = "Such a scheduler is not found";
 	String ERROR_SET_PARTICIPANTS = "Unable to add participants to specified Slot";
+	String ERROR_ACTIVATE_USER = "Error activating user";
 	
 	String REQUEST_LOGIN = "/login";
 	String REQUEST_CREATE_USER = "/createUser";
@@ -44,14 +45,18 @@ public interface Constants {
 	String REQUEST_ADD_SCHEDULER = "/addScheduler";
 	String REQUEST_EDIT_SCHEDULER = "/editScheduler";
 	String REQUEST_REMOVE_SCHEDULER = "/removeScheduler";
+	String REQUEST_ACTIVATE_USER = "requestActivateUser";
 	
 	int CALENDAR_TYPE_COLLABORATED = 2;
 	String SLOT_STATUS_FREE = "free";
 	String STATUS_GREEN = "green";
 	
+	boolean USER_STATUS_ACTIVATED = true;
+	boolean USER_STATUS_NOT_ACTIVATED = false;
+	
 	String MAP_SLOT_LIST = "slots";
 	String MAP_PERSON_LIST = "persons";
+	String SERVER_MAT_URL = "http://myavailabletime.com";
+	String SERVER_MAT_ACTIVATE = "activate";
 	
-	
-
 }

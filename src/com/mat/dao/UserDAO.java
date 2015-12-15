@@ -13,7 +13,11 @@ public class UserDAO {
 	@Id
 	@GeneratedValue
 	int id;
-
+	
+	boolean activated;
+	
+	String hashForActivation;
+	
 	String email; // username
 
 	String password;
@@ -137,5 +141,21 @@ public class UserDAO {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
+	public boolean isActivated() {
+		return activated;
+	}
 
+	public void setActivated(boolean isActivated) {
+		this.activated = isActivated;
+	}
+
+	public String getHashForActivation() {
+		return hashForActivation;
+	}
+
+	public void setHashForActivation(String hashForActivation) {
+		this.hashForActivation = hashForActivation;
+	}
+	
 }

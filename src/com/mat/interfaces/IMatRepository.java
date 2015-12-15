@@ -48,5 +48,7 @@ public interface IMatRepository {
 	boolean editScheduler(Scheduler scheduler);
 
 	boolean removeScheduler(int id);
+	
+	boolean activateUser(int userId);
 
 }

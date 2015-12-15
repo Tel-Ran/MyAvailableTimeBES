@@ -26,4 +26,6 @@
 		<property name="serviceInterface" value="com.mat.interfaces.IExternalServices"></property>
 	</bean> -->
 
+		<import resource="mailSending.xml"/>
+
 </beans>
